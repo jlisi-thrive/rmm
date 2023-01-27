@@ -42,7 +42,8 @@ def get_snow_auth_header():
 
 def get_snow_record(id):
     headers = get_snow_auth_header()
-    url = "https://thrivedev.service-now.com/api/thn/salt/record/u_thrive_monitoring_job_returns?jid=" + id
+    snuri = __opts__.get("snuri", "Not Set")
+    url = snuri + "/api/thn/salt/record/u_thrive_monitoring_job_returns?jid=" + id
     #url = "https://thrivedev.service-now.com/api/now/table/u_thrive_monitoring_job_returns?sysparm_query=u_jid%3D"+id
     response = requests.request("GET", url, headers=headers)
     resultJson = response.json()
@@ -51,7 +52,8 @@ def get_snow_record(id):
 
 def get_snow_job_record(id):
     headers = get_snow_auth_header()
-    url = "https://thrivedev.service-now.com/api/thn/salt/record/u_thrive_monitoring_jobs?jid="+id
+    snuri = __opts__.get("snuri", "Not Set")
+    url = snuri + "/api/thn/salt/record/u_thrive_monitoring_jobs?jid="+id
     #url = "https://thrivedev.service-now.com/api/now/table/u_thrive_monitoring_jobs?sysparm_query=u_jid%3D"+id
     response = requests.request("GET", url, headers=headers)
     resultJson = response.json()
@@ -60,7 +62,8 @@ def get_snow_job_record(id):
 
 def get_snow_fun_records(fun):
     headers = get_snow_auth_header()
-    url = "https://thrivedev.service-now.com/api/thn/salt/record/u_thrive_monitoring_job_returns?fun="+fun
+    snuri = __opts__.get("snuri", "Not Set")
+    url = snuri + "/api/thn/salt/record/u_thrive_monitoring_job_returns?fun="+fun
     #url = "https://thrivedev.service-now.com/api/now/table/u_thrive_monitoring_job_returns?sysparm_query=u_function%3D"+fun
     response = requests.request("GET", url, headers=headers)
     resultJson = response.json()
@@ -76,7 +79,8 @@ def create_snow_record(data, event_type):
     fun = data.get("fun")
     headers = get_snow_auth_header()
     #url = ""
-    url = "https://thrivedev.service-now.com/api/thn/salt/events"
+    snuri = __opts__.get("snuri", "Not Set")
+    url = snuri + "/api/thn/salt/events"
     if(event_type == "SALT_RETURN"):
         #url = "https://thrivedev.service-now.com/api/now/table/u_thrive_monitoring_job_returns"
         payload = json.dumps({
@@ -190,7 +194,8 @@ def get_minions():
     """
     print("In get_minions")
     headers = get_snow_auth_header()
-    url = "https://thrivedev.service-now.com/api/thn/salt/record/u_thrivermm_minions"
+    snuri = __opts__.get("snuri", "Not Set")
+    url = snuri + "/api/thn/salt/record/u_thrivermm_minions"
     #url = "https://thrivedev.service-now.com/api/now/table/u_thrive_monitoring_job_returns?sysparm_query=u_minionISNOTEMPTY"
     response = requests.request("GET", url, headers=headers)
     resultJson = response.json()
@@ -207,7 +212,8 @@ def get_jids():
     """
     print("In get_jids");
     headers = get_snow_auth_header()
-    url = "https://thrivedev.service-now.com/api/thn/salt/record/u_thrive_monitoring_jobs"
+    snuri = __opts__.get("snuri", "Not Set")
+    url = snuri + "/api/thn/salt/record/u_thrive_monitoring_jobs"
     #url = "https://thrivedev.service-now.com/api/now/table/u_thrive_monitoring_jobs"
     response = requests.request("GET", url, headers=headers)
     resultJson = response.json()
