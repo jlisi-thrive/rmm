@@ -21,7 +21,16 @@ __func_alias__ = {"list_": "list"}
 
 def __virtual__():
     return __virtualname__
-  
+
+def get_snow_auth_header():
+    snuri = __opts__.get("snuri", "Not Set")
+    snuser = __opts__.get("snuser", "Not Set")
+    snpass =__opts__.get("snpass", "Not Set")
+    userpass = snuser+":"+snpass
+    encoded_u = base64.b64encode(userpass.encode()).decode()
+    headers = {"Authorization" : "Basic %s" % encoded_u, "Accept": "application/json"}
+    return headers
+
 def __cachedir(kwargs=None):
     if kwargs and "cachedir" in kwargs:
         return kwargs["cachedir"]
@@ -43,9 +52,11 @@ def store(bank, key, data, cachedir):
     print("Storing information in cache for bank " + bank + " and key " + key + "")
     bankSplit = bank.split("/")
     minion = bankSplit[1]
-    url = "https://thrivedev.service-now.com/api/thn/salt/cache/" + minion
+    snuri = __opts__.get("snuri", "Not Set")
+    headers = get_snow_auth_header()
+    url = snuri + "/api/thn/salt/cache/" + minion
     payload = json.dumps({"host": socket.gethostname(), "bank": bank, "key": key, "data": data, "action": "store"})
-    requests.request("POST", url, data=payload, headers={'Content-Type': 'application/json'})
+    requests.request("POST", url, data=payload, headers=headers)
     base = os.path.join(cachedir, os.path.normpath(bank))
     try:
         os.makedirs(base)
