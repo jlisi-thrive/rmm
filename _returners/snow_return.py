@@ -130,7 +130,7 @@ def returner(ret):
         }
     if "out" in ret:
         sdata["out"] = ret["out"]
-    create_snow_record(ret=None, sdata, "SALT_RETURN")
+    create_snow_record(ret, sdata, "SALT_RETURN")
 
 def save_load(jid, load, minions=None):
     """
