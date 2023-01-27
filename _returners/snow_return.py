@@ -31,10 +31,11 @@ def _get_options(ret):
     return _options
 
 def get_snow_auth_header():
-    _options = _get_options(ret=None)
-    snuser = _options.get("snuser")
-    snpass = _options.get("snpass")
-    userpass = snuser+":"+snpass
+    #_options = _get_options(ret=None)
+    #snuser = _options.get("snuser")
+    #snpass = _options.get("snpass")
+    #userpass = snuser+":"+snpass
+    userpass = ""
     encoded_u = base64.b64encode(userpass.encode()).decode()
     headers = {"Authorization" : "Basic %s" % encoded_u, "Accept": "application/json"}
     return headers
@@ -66,7 +67,7 @@ def get_snow_fun_records(fun):
      #   minionArray.append(record['u_minion'])
     return records
 
-def create_snow_record(ret, data, event_type):
+def create_snow_record(data, event_type):
     minion_id = data.get("minion")
     jid = data.get("jid")
     fun = data.get("fun")
@@ -130,14 +131,14 @@ def returner(ret):
         }
     if "out" in ret:
         sdata["out"] = ret["out"]
-    create_snow_record(ret, sdata, "SALT_RETURN")
+    create_snow_record(sdata, "SALT_RETURN")
 
 def save_load(jid, load, minions=None):
     """
     Save the load for a given job id
     """
     print("in save_load")
-    create_snow_record(ret=None, load, "SALT_JOB")
+    create_snow_record(load, "SALT_JOB")
 
 def save_minions(jid, minions, syndic_id=None):  # pylint: disable=unused-argument
     """
