@@ -13,7 +13,7 @@ sync_modules:
         
 snow_event:
   http.query:
-    - name: https://thrivedev.service-now.com/api/thn/salt/minion-start/{{masterId}}/{{minionId}}
+    - name: https://thrive.service-now.com/api/thn/salt/minion-start/{{masterId}}/{{minionId}}
     - method: POST
     - status: 200
     - header_dict:
