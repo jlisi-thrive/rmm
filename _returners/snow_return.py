@@ -32,14 +32,10 @@ def _get_options(ret):
     return _options
 
 def get_snow_auth_header():
-    #opts = salt.config.client_config('/etc/salt/master')
-    #print(opts.snpass)
-    print(__opts__.get("snpass", "Not Set"))
-    #_options = _get_options(ret=None)
-    #snuser = _options.get("snuser")
-    #snpass = _options.get("snpass")
-    #userpass = snuser+":"+snpass
-    userpass = ""
+    snuri = __opts__.get("snuri", "Not Set")
+    snuser = __opts__.get("snuser", "Not Set")
+    snpass =__opts__.get("snpass", "Not Set")
+    userpass = snuser+":"+snpass
     encoded_u = base64.b64encode(userpass.encode()).decode()
     headers = {"Authorization" : "Basic %s" % encoded_u, "Accept": "application/json"}
     return headers
