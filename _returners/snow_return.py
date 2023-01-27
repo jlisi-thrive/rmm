@@ -2,6 +2,7 @@ import json
 import logging
 import requests
 import base64
+import salt.config
 import salt.returners
 import socket
 import salt.utils.jid
@@ -31,6 +32,8 @@ def _get_options(ret):
     return _options
 
 def get_snow_auth_header():
+    opts = salt.config.client_config('/etc/salt/master')
+    print(opts)
     #_options = _get_options(ret=None)
     #snuser = _options.get("snuser")
     #snpass = _options.get("snpass")
