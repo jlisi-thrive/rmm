@@ -42,7 +42,8 @@ def get_snow_auth_header():
 
 def get_snow_record(id):
     headers = get_snow_auth_header()
-    url = "https://thrivedev.service-now.com/api/now/table/u_thrive_monitoring_job_returns?sysparm_query=u_jid%3D"+id
+    url = "https://thrivedev.service-now.com/api/thn/salt/record/u_thrive_monitoring_job_returns?jid=" + id
+    #url = "https://thrivedev.service-now.com/api/now/table/u_thrive_monitoring_job_returns?sysparm_query=u_jid%3D"+id
     response = requests.request("GET", url, headers=headers)
     resultJson = response.json()
     record = resultJson['result'][0]
@@ -50,7 +51,8 @@ def get_snow_record(id):
 
 def get_snow_job_record(id):
     headers = get_snow_auth_header()
-    url = "https://thrivedev.service-now.com/api/now/table/u_thrive_monitoring_jobs?sysparm_query=u_jid%3D"+id
+    url = "https://thrivedev.service-now.com/api/thn/salt/record/u_thrive_monitoring_jobs?jid="+id
+    #url = "https://thrivedev.service-now.com/api/now/table/u_thrive_monitoring_jobs?sysparm_query=u_jid%3D"+id
     response = requests.request("GET", url, headers=headers)
     resultJson = response.json()
     record = resultJson['result'][0]
@@ -58,7 +60,8 @@ def get_snow_job_record(id):
 
 def get_snow_fun_records(fun):
     headers = get_snow_auth_header()
-    url = "https://thrivedev.service-now.com/api/now/table/u_thrive_monitoring_job_returns?sysparm_query=u_function%3D"+fun
+    url = "https://thrivedev.service-now.com/api/thn/salt/record/u_thrive_monitoring_job_returns?fun="+fun
+    #url = "https://thrivedev.service-now.com/api/now/table/u_thrive_monitoring_job_returns?sysparm_query=u_function%3D"+fun
     response = requests.request("GET", url, headers=headers)
     resultJson = response.json()
     records = resultJson['result']
@@ -187,14 +190,15 @@ def get_minions():
     """
     print("In get_minions")
     headers = get_snow_auth_header()
-    url = "https://thrivedev.service-now.com/api/now/table/u_thrive_monitoring_job_returns?sysparm_query=u_minionISNOTEMPTY"
+    url = "https://thrivedev.service-now.com/api/thn/salt/record/u_thrivermm_minions"
+    #url = "https://thrivedev.service-now.com/api/now/table/u_thrive_monitoring_job_returns?sysparm_query=u_minionISNOTEMPTY"
     response = requests.request("GET", url, headers=headers)
     resultJson = response.json()
     records = resultJson['result']
     minionArray = []
     for record in records:
         minionArray.append(record['u_minion'])
-    uniqueMinions = set(minionArray)
+    #uniqueMinions = set(minionArray)
     return uniqueMinions
 
 def get_jids():
@@ -203,7 +207,8 @@ def get_jids():
     """
     print("In get_jids");
     headers = get_snow_auth_header()
-    url = "https://thrivedev.service-now.com/api/now/table/u_thrive_monitoring_jobs"
+    url = "https://thrivedev.service-now.com/api/thn/salt/record/u_thrive_monitoring_jobs"
+    #url = "https://thrivedev.service-now.com/api/now/table/u_thrive_monitoring_jobs"
     response = requests.request("GET", url, headers=headers)
     resultJson = response.json()
     records = resultJson['result']
