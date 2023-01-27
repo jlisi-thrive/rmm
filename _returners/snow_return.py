@@ -130,14 +130,14 @@ def returner(ret):
         }
     if "out" in ret:
         sdata["out"] = ret["out"]
-    create_snow_record(sdata, "SALT_RETURN")
+    create_snow_record(ret=None, sdata, "SALT_RETURN")
 
 def save_load(jid, load, minions=None):
     """
     Save the load for a given job id
     """
     print("in save_load")
-    create_snow_record(load, "SALT_JOB")
+    create_snow_record(ret=None, load, "SALT_JOB")
 
 def save_minions(jid, minions, syndic_id=None):  # pylint: disable=unused-argument
     """
