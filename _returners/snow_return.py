@@ -33,7 +33,7 @@ def _get_options(ret):
 
 def get_snow_auth_header():
     opts = salt.config.client_config('/etc/salt/master')
-    print(json.dumps(opts))
+    print(opts.snpass)
     #_options = _get_options(ret=None)
     #snuser = _options.get("snuser")
     #snpass = _options.get("snpass")
