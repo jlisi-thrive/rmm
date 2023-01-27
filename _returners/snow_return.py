@@ -31,7 +31,7 @@ def _get_options(ret=None):
     return _options
 
 def get_snow_auth_header():
-    _options = _get_options(ret)
+    _options = _get_options()
     snuser = _options.get("snuser")
     snpass = _options.get("snpass")
     userpass = snuser+":"+snpass
