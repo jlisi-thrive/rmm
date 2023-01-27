@@ -10,7 +10,11 @@ default_gateway:
 sync_modules:
   saltutil.sync_modules:
     - refresh: True
-        
+    
+pingparsing:
+  pip.installed:
+    - name: pingparsing
+    
 snow_event:
   http.query:
     - name: https://thrive.service-now.com/api/thn/salt/minion-start/{{masterId}}/{{minionId}}
