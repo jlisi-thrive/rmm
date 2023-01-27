@@ -5,6 +5,7 @@ import os.path
 import shutil
 import json
 import requests
+import base64
 import tempfile
 import socket
 
