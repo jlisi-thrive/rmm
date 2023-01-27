@@ -15,7 +15,7 @@ __virtualname__ = "snow"
 def __virtual__():
     return __virtualname__
 
-def _get_options(ret=None):
+def _get_options(ret):
     """
     Get the servicenow connection options from salt.
     """
@@ -31,7 +31,7 @@ def _get_options(ret=None):
     return _options
 
 def get_snow_auth_header():
-    _options = _get_options()
+    _options = _get_options(ret=None)
     snuser = _options.get("snuser")
     snpass = _options.get("snpass")
     userpass = snuser+":"+snpass
@@ -66,7 +66,7 @@ def get_snow_fun_records(fun):
      #   minionArray.append(record['u_minion'])
     return records
 
-def create_snow_record(data, event_type):
+def create_snow_record(ret, data, event_type):
     minion_id = data.get("minion")
     jid = data.get("jid")
     fun = data.get("fun")
