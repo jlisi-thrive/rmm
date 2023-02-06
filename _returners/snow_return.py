@@ -144,7 +144,7 @@ def save_load(jid, load, minions=None):
     """
     Save the load for a given job id
     """
-    print("in save_load")
+    #print("in save_load")
     create_snow_record(load, "SALT_JOB")
 
 def save_minions(jid, minions, syndic_id=None):  # pylint: disable=unused-argument
@@ -165,7 +165,7 @@ def get_jid(jid):
     """
     Return the return information associated with a jid
     """
-    print("in get_jid")
+    #print("in get_jid")
     ret = {}
     rdata = get_snow_record(jid)
     details = json.loads(rdata['u_return_data'])
@@ -181,7 +181,7 @@ def get_fun(fun):
     """
     Return the most recent jobs that have executed the named function
     """
-    print("In get_fun")
+    #print("In get_fun")
     ret = {}
     #rdata = get_snow_fun_records(fun)
     #parsed = json.loads(rdata)
@@ -192,7 +192,7 @@ def get_minions():
     """
     Return a list of minions
     """
-    print("In get_minions")
+    #print("In get_minions")
     headers = get_snow_auth_header()
     snuri = __opts__.get("snuri", "Not Set")
     url = snuri + "/api/thn/salt/record/u_thrivermm_minions"
@@ -210,7 +210,7 @@ def get_jids():
     """
     Return a list of job ids
     """
-    print("In get_jids");
+    #print("In get_jids");
     headers = get_snow_auth_header()
     snuri = __opts__.get("snuri", "Not Set")
     url = snuri + "/api/thn/salt/record/u_thrive_monitoring_jobs"
@@ -240,5 +240,5 @@ def prep_jid(nocache=False, passed_jid=None):  # pylint: disable=unused-argument
     """
     Do any work necessary to prepare a JID, including sending a custom id
     """
-    print("In prep_jid")
+    #print("In prep_jid")
     return passed_jid if passed_jid is not None else salt.utils.jid.gen_jid(__opts__)
