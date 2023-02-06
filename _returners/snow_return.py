@@ -156,7 +156,7 @@ def get_load(jid):
     """
     Return the load associated with a given job id from SNOW
     """
-    print("in get_load")
+    #print("in get_load")
     snowRecord = get_snow_job_record(jid)
     return salt.utils.json.loads(snowRecord['u_return_data'])
     
