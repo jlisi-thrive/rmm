@@ -1,6 +1,6 @@
 disable_lmhost:
-   reg.present:
+  reg.present:
     - name: HKLM\SYSTEM\CurrentControlSet\Services\NetBT\Parameters
-    - vname: EnableLMHOSTS
-    - vdata: 0
-    - vtype: REG_DWORD
+    - vname: EnableLMHOSTS
+    - vdata: 0
+    - vtype: REG_DWORD
