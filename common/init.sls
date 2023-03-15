@@ -1,7 +1,9 @@
-schedule:
-  apply_highstate:
+highstate_schedule:
+  schedule.present:
     - function: state.highstate
     - seconds: 60
+    - maxrunning: 1
+    - enabled: True
 
 file_override_example:
   file.managed:
