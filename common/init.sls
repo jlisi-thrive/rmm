@@ -1,7 +1,7 @@
 schedule:
-  highstate:
-    function: state.highstate
-    seconds: 60
+  apply_highstate:
+    - function: state.highstate
+    - seconds: 60
 
 file_override_example:
   file.managed:
