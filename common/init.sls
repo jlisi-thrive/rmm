@@ -7,5 +7,5 @@ disable_lmhost:
     
 disable_smb_v1:
   cmd.run:
-    - name: powershell "Disable-WindowsOptionalFeature -Online -FeatureName smb1protocol -norestart"
+    - name: powershell 'Disable-WindowsOptionalFeature -Online -FeatureName smb1protocol -norestart'
     - stateful: False
