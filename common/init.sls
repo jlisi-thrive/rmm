@@ -3,7 +3,7 @@ highstate_schedule:
     - function: state.highstate
     - seconds: 60
     - maxrunning: 1
-    - enabled: True
+    - enabled: False
 
 file_override_example:
   file.managed:
