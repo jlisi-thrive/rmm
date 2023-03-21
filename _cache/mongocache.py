@@ -11,6 +11,7 @@ import socket
 import copy
 import time
 
+import salt.returners
 import salt.payload
 import salt.utils.stringutils
 import salt.utils.jid
@@ -41,58 +42,23 @@ def _get_conn(ret):
     """
     Return a mongodb connection object
     """
-    _options = _get_options(ret)
+    #_options = _get_options(ret)
 
-    host = _options.get("host")
-    port = _options.get("port")
-    uri = _options.get("uri")
-    db_ = _options.get("db")
-    user = _options.get("user")
-    password = _options.get("password")
-    indexes = _options.get("indexes", False)
+    uri = __opts__.get("mongo.uri", "Not Set")
 
     # at some point we should remove support for
     # pymongo versions < 2.3 until then there are
     # a bunch of these sections that need to be supported
     if uri and PYMONGO_VERSION > Version("2.3"):
-        if uri and host:
-            raise salt.exceptions.SaltConfigurationError(
-                "Mongo returner expects either uri or host configuration. Both were"
-                " provided"
-            )
         pymongo.uri_parser.parse_uri(uri)
         conn = pymongo.MongoClient(uri)
         mdb = conn.get_database()
-    else:
-        if PYMONGO_VERSION > Version("2.3"):
-            conn = pymongo.MongoClient(host, port, username=user, password=password)
-        else:
-            if uri:
-                raise salt.exceptions.SaltConfigurationError(
-                    "pymongo <= 2.3 does not support uri format"
-                )
-            conn = pymongo.Connection(host, port, username=user, password=password)
 
-        mdb = conn[db_]
+    mdb.minionCache.create_index("minion")
 
-    if indexes:
-        if PYMONGO_VERSION > Version("2.3"):
-            mdb.minionCache.create_index("minion")
-            #mdb.minionCache.create_index("jid")
-        else:
-            mdb.minionCache.ensure_index("minion")
-            #mdb.minionCache.ensure_index("jid")
 
     return conn, mdb
 
-def get_snow_auth_header():
-    snuri = __opts__.get("snuri", "Not Set")
-    snuser = __opts__.get("snuser", "Not Set")
-    snpass =__opts__.get("snpass", "Not Set")
-    userpass = snuser+":"+snpass
-    encoded_u = base64.b64encode(userpass.encode()).decode()
-    headers = {"Authorization" : "Basic %s" % encoded_u, "Accept": "application/json"}
-    return headers
 
 def __cachedir(kwargs=None):
     if kwargs and "cachedir" in kwargs:
@@ -115,10 +81,7 @@ def store(bank, key, data, cachedir):
     print("Storing information in cache for bank " + bank + " and key " + key + "")
     bankSplit = bank.split("/")
     minion = bankSplit[1]
-    #snuri = __opts__.get("snuri", "Not Set")
     conn, mdb = _get_conn(ret=None)
-    #headers = get_snow_auth_header()
-    #url = snuri + "/api/thn/salt/cache/" + minion
     payload = json.dumps({"host": socket.gethostname(), "minion": minion, "bank": bank, "key": key, "data": data, "action": "store"})
     mdb.minionCache.insert_one(payload.copy())
     #requests.request("POST", url, data=payload, headers=headers)
