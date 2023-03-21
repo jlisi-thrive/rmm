@@ -79,7 +79,17 @@ def store(bank, key, data, cachedir):
     minion = bankSplit[1]
     conn, mdb = _get_conn(ret=None)
     payload = {"host": socket.gethostname(), "minion": minion, "bank": bank, "key": key, "data": data, "action": "store"}
-    mdb.minionCache.insert_one(payload.copy())
+    
+    if key == 'mine':
+        newvalues = { "$set": { 'mine': data } }
+        mdb.minionCache.update_one({ 'minion': minion }, newvalues, upsert=True)
+    else:
+        newvalues = { "$set": { 'data': data } }
+        mdb.minionCache.update_one({ 'minion': minion }, newvalues, upsert=True)
+
+    
+    
+    #mdb.minionCache.insert_one(payload.copy())
     #requests.request("POST", url, data=payload, headers=headers)
     base = os.path.join(cachedir, os.path.normpath(bank))
     try:
