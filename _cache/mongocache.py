@@ -8,6 +8,12 @@ import requests
 import base64
 import tempfile
 import socket
+import copy
+import time
+
+import salt.utils.jid
+from salt.utils.versions import Version
+import salt.utils.stringutils
 
 import salt.payload
 import salt.utils.atomicfile
