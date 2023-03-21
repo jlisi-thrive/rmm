@@ -78,7 +78,7 @@ def store(bank, key, data, cachedir):
     bankSplit = bank.split("/")
     minion = bankSplit[1]
     conn, mdb = _get_conn(ret=None)
-    payload = json.dumps({"host": socket.gethostname(), "minion": minion, "bank": bank, "key": key, "data": data, "action": "store"})
+    payload = {"host": socket.gethostname(), "minion": minion, "bank": bank, "key": key, "data": data, "action": "store"}
     mdb.minionCache.insert_one(payload.copy())
     #requests.request("POST", url, data=payload, headers=headers)
     base = os.path.join(cachedir, os.path.normpath(bank))
