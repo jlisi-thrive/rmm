@@ -11,14 +11,14 @@ import socket
 import copy
 import time
 
+import salt.payload
+import salt.utils.stringutils
 import salt.utils.jid
 from salt.utils.versions import Version
-import salt.utils.stringutils
-
-import salt.payload
 import salt.utils.atomicfile
 import salt.utils.files
 from salt.exceptions import SaltCacheError
+
 try:
     import pymongo
 
