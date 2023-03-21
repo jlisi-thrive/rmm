@@ -15,15 +15,12 @@ import salt.returners
 import salt.payload
 import salt.utils.stringutils
 import salt.utils.jid
-from salt.utils.versions import Version
 import salt.utils.atomicfile
 import salt.utils.files
 from salt.exceptions import SaltCacheError
 
 try:
     import pymongo
-
-    PYMONGO_VERSION = Version(pymongo.version)
     HAS_PYMONGO = True
 except ImportError:
     HAS_PYMONGO = False
@@ -49,10 +46,9 @@ def _get_conn(ret):
     # at some point we should remove support for
     # pymongo versions < 2.3 until then there are
     # a bunch of these sections that need to be supported
-    if uri and PYMONGO_VERSION > Version("2.3"):
-        pymongo.uri_parser.parse_uri(uri)
-        conn = pymongo.MongoClient(uri)
-        mdb = conn.get_database()
+    pymongo.uri_parser.parse_uri(uri)
+    conn = pymongo.MongoClient(uri)
+    mdb = conn.get_database()
 
     mdb.minionCache.create_index("minion")
 
