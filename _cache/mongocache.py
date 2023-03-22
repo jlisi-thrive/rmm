@@ -125,6 +125,7 @@ def fetch(bank, key, cachedir):
     inkey = False
     bankSplit = bank.split("/")
     minion = bankSplit[1]
+    conn, mdb = _get_conn(ret=None)
     url = "https://thrivedev.service-now.com/api/thn/salt/cache/" + minion
     saltReturn = ""
     key_file = os.path.join(cachedir, os.path.normpath(bank), "{}.p".format(key))
@@ -144,6 +145,8 @@ def fetch(bank, key, cachedir):
                 saltReturn = salt.payload.load(fh_)
         #payload = json.dumps({"bank": bank, "key": key, "data": saltReturn, "action": "fetch"})
         #requests.request("POST", url, data=payload, headers={'Content-Type': 'application/json'})
+        newvalues = { "$set": saltReturn }
+        mdb.minions.update_one({ 'minion': minion }, newvalues, upsert=True)
         return saltReturn
     except OSError as exc:
         raise SaltCacheError(
