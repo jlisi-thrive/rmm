@@ -50,7 +50,7 @@ def _get_conn(ret):
     conn = pymongo.MongoClient(uri)
     mdb = conn.get_database()
 
-    mdb.minionCache.create_index("minion")
+    mdb.minions.create_index("minion")
 
 
     return conn, mdb
@@ -79,13 +79,16 @@ def store(bank, key, data, cachedir):
     minion = bankSplit[1]
     conn, mdb = _get_conn(ret=None)
     payload = {"host": socket.gethostname(), "minion": minion, "bank": bank, "key": key, "data": data, "action": "store"}
-    
-    if key == 'mine':
-        newvalues = { "$set": { 'mine': data } }
-        mdb.minionCache.update_one({ 'minion': minion }, newvalues, upsert=True)
-    else:
-        newvalues = { "$set": { 'data': data } }
-        mdb.minionCache.update_one({ 'minion': minion }, newvalues, upsert=True)
+    dataWithHost = data
+    dataWithHost["host"] = socket.gethostname()
+    newvalues = { "$set": dataWithHost }
+    mdb.minions.update_one({ 'minion': minion }, newvalues, upsert=True)
+    # if key == 'mine':
+    #     newvalues = { "$set": { 'mine': data } }
+    #     mdb.minionCache.update_one({ 'minion': minion }, newvalues, upsert=True)
+    # else:
+    #     newvalues = { "$set": { 'data': data } }
+    #     mdb.minionCache.update_one({ 'minion': minion }, newvalues, upsert=True)
 
     
     
