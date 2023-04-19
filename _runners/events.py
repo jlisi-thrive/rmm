@@ -14,3 +14,16 @@ def jobs(data):
       data_version="1.0"
   )
   return client.send(event)
+
+def minionSetup(data):
+  topicKey = __opts__.get("grid.key", "Not Set")
+  topicEndpoint = __opts__.get("grid.endpoint", "Not Set")
+  credential = AzureKeyCredential(topicKey)
+  client = EventGridPublisherClient(topicEndpoint, credential)
+  event = EventGridEvent(
+      data=json.dumps(data),
+      subject="presence/fromcustomevent",
+      event_type="minion_presence",
+      data_version="1.0"
+  )
+  return client.send(event)
