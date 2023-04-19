@@ -1,5 +1,5 @@
 from salt.ext.tornado.httpclient import AsyncHTTPClient
-from salt.ext.tornado.gen import gen
+from salt.ext.tornado import gen
 
 @gen.coroutine
 def torn():
