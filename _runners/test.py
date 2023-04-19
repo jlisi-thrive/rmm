@@ -4,8 +4,8 @@ from azure.core.credentials import AzureKeyCredential
 def testing():
   topicKey = __opts__.get("grid.key", "Not Set")
   topicEndpoint = __opts__.get("grid.endpoint", "Not Set")
-  credential = AzureKeyCredential(topic_key)
-  client = EventGridPublisherClient(endpoint, credential)
+  credential = AzureKeyCredential(topicKey)
+  client = EventGridPublisherClient(topicEndpoint, credential)
   event = EventGridEvent(
       data={"team": "azure-sdk"},
       subject="presence/minionfromrunner",
