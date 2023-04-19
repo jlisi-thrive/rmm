@@ -236,7 +236,7 @@ def prep_jid(nocache=False, passed_jid=None):  # pylint: disable=unused-argument
     """
     return passed_jid if passed_jid is not None else salt.utils.jid.gen_jid(__opts__)
 
-def event_return(events):
+async def event_return(events):
     """
     Return events to Mongodb server
     """
@@ -244,13 +244,14 @@ def event_return(events):
     TOPIC_NAME = __opts__.get("topic.name", "Not Set")
     print("In event return here")
     print(TOPIC_NAME)
-    servicebus_client = ServiceBusClient.from_connection_string(
+    servicebus_client = await ServiceBusClient.from_connection_string(
             conn_str=NAMESPACE_CONNECTION_STR,
             logging_enable=True)
     sender = servicebus_client.get_topic_sender(topic_name=TOPIC_NAME)
     for event in events:
         tag = event.get("tag", "")
         data = event.get("data", "")
+        print("Sending event with tag: ", event)
         #payload = json.dumps({tag: tag, data: {"test": "test"}})
         message = ServiceBusMessage(body="testbody", subject="TestSubject")
-        sender.send_messages(message)
+        await sender.send_messages(message)
