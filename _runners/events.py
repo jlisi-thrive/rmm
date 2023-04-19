@@ -21,6 +21,9 @@ async def sendTopic(data):
           async with sender:
               await send_single_message(sender)
 
+def runTopic(data):
+    asyncio.run(sendTopic(data))
+            
 def jobs(data):
   topicKey = __opts__.get("grid.key", "Not Set")
   topicEndpoint = __opts__.get("grid.endpoint", "Not Set")
