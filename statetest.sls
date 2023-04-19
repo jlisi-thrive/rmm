@@ -1,4 +1,4 @@
 thrive/mystaterun:
   event.send:
     - data:
-      -test: "test"
+        status: "Half-way through the state run!"
