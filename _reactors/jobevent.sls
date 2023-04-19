@@ -1,4 +1,4 @@
-{% set eventData =  data['data'] %}
+{% set eventData =  data | tojson %}
 
 send_event:
   runner.events.jobs:
