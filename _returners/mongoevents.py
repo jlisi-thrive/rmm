@@ -1,4 +1,5 @@
 import logging
+import asyncio
 from azure.servicebus.aio import ServiceBusClient
 from azure.servicebus import ServiceBusMessage
 
@@ -233,19 +234,26 @@ def prep_jid(nocache=False, passed_jid=None):  # pylint: disable=unused-argument
     """
     return passed_jid if passed_jid is not None else salt.utils.jid.gen_jid(__opts__)
 
+async def send_single_message(sender, payload):
+    # Create a Service Bus message and send it to the queue
+    message = ServiceBusMessage(body=payload, subject="TestSubject")
+    await sender.send_messages(message)
+    print("Sent a single message")
 
-def event_return(events):
+async def event_return(events):
     """
     Return events to Mongodb server
     """
     conn, mdb = _get_conn(ret=None)
     NAMESPACE_CONNECTION_STR = __opts__.get("topic.string", "Not Set")
     TOPIC_NAME = __opts__.get("topic.name", "Not Set")
-    servicebus_client = ServiceBusClient.from_connection_string(conn_str=NAMESPACE_CONNECTION_STR,logging_enable=True)
-    sender = servicebus_client.get_topic_sender(topic_name=TOPIC_NAME)
-    for event in events:
-        tag = event.get("tag", "")
-        data = event.get("data", "")
-        payload = salt.utils.json.dumps(data)
-        message = ServiceBusMessage(body=payload, subject="TestSubject")
-        sender.send_messages(message)
+    async with ServiceBusClient.from_connection_string(
+            conn_str=NAMESPACE_CONNECTION_STR,
+            logging_enable=True) as servicebus_client:
+            sender = servicebus_client.get_topic_sender(topic_name=TOPIC_NAME)
+            async with sender:
+                    for event in events:
+                        tag = event.get("tag", "")
+                        data = event.get("data", "")
+                        payload = salt.utils.json.dumps(data)
+                        await send_single_message(sender, payload)
