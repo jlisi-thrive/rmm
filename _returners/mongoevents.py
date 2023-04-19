@@ -55,50 +55,20 @@ def _get_options(ret=None):
     )
     return _options
 
-
 def _get_conn(ret):
     """
     Return a mongodb connection object
     """
-    _options = _get_options(ret)
+    #_options = _get_options(ret)
 
-    host = _options.get("host")
-    port = _options.get("port")
-    uri = _options.get("uri")
-    db_ = _options.get("db")
-    user = _options.get("user")
-    password = _options.get("password")
-    indexes = _options.get("indexes", False)
+    uri = __opts__.get("mongo.uri", "Not Set")
 
     # at some point we should remove support for
     # pymongo versions < 2.3 until then there are
     # a bunch of these sections that need to be supported
-    if uri:
-        if uri and host:
-            raise salt.exceptions.SaltConfigurationError(
-                "Mongo returner expects either uri or host configuration. Both were"
-                " provided"
-            )
-        pymongo.uri_parser.parse_uri(uri)
-        conn = pymongo.MongoClient(uri)
-        mdb = conn.get_database()
-    else:
-        if uri and host:
-            raise salt.exceptions.SaltConfigurationError(
-                "Mongo returner expects either uri or host configuration. Both were"
-                " provided"
-            )
-        pymongo.uri_parser.parse_uri(uri)
-        conn = pymongo.MongoClient(uri)
-        mdb = conn.get_database()
-
-        mdb = conn[db_]
-
-    if indexes:
-            mdb.saltReturns.create_index("minion")
-            mdb.saltReturns.create_index("jid")
-            mdb.jobs.create_index("jid")
-            mdb.events.create_index("tag")
+    pymongo.uri_parser.parse_uri(uri)
+    conn = pymongo.MongoClient(uri)
+    mdb = conn.get_database()
 
     return conn, mdb
 
