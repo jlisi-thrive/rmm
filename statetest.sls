@@ -1,1 +1,1 @@
-{% set stateOutput = salt['state.apply']('jinjatest') | tojson %}
+{% set stateOutput = salt['state.apply']('set_customgrain') | tojson %}
