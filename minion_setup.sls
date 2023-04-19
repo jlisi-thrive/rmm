@@ -6,6 +6,7 @@
 default_gateway:
   grains.present:
     - value: {{defaultGateway}}
+    - fire_event: True
 
 sync_modules:
   saltutil.sync_modules:
