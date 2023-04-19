@@ -243,6 +243,7 @@ def event_return(events):
     TOPIC_NAME = __opts__.get("topic.name", "Not Set")
     print("In event return here")
     print(TOPIC_NAME)
+    print(NAMESPACE_CONNECTION_STR)
     servicebus_client = ServiceBusClient.from_connection_string(
             conn_str=NAMESPACE_CONNECTION_STR,
             logging_enable=True)
