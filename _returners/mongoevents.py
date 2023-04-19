@@ -384,6 +384,8 @@ def event_return(events):
     servicebus_client = ServiceBusClient.from_connection_string(conn_str=NAMESPACE_CONNECTION_STR,logging_enable=True)
     sender = servicebus_client.get_topic_sender(topic_name=TOPIC_NAME)
     for event in events:
-        payload = salt.utils.json.dumps(event)
+        tag = event.get("tag", "")
+        data = event.get("data", "")
+        payload = salt.utils.json.dumps(data)
         message = ServiceBusMessage(body=payload, subject="TestSubject")
         sender.send_messages(message)
