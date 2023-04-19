@@ -3,4 +3,4 @@
 default_gateway:
   grains.present:
     - value: {{defaultGateway}}
-    - fire_event: salt/job/test
+    - fire_event: thrive/custom
