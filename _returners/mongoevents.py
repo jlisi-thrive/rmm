@@ -111,7 +111,7 @@ except ImportError:
 log = logging.getLogger(__name__)
 
 # Define the module's virtual name
-__virtualname__ = "mongo"
+__virtualname__ = "mongoevents"
 
 
 def __virtual__():
