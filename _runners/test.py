@@ -1,2 +1,2 @@
 def testing():
-  return "From test runner"
+  return __opts__.get("mongo.uri", "Not Set")
