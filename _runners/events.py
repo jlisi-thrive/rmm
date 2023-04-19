@@ -22,7 +22,7 @@ async def sendTopic(data):
               await send_single_message(sender, data)
 
 def runTopic(data):
-    if data.retcode == 0:
+    if data.get('retcode') == 0:
         asyncio.run(sendTopic(data))
             
 def jobs(data):
