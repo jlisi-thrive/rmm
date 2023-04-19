@@ -1,2 +1,2 @@
 def testing():
-  print("HEY")
+  return "From test runner"
