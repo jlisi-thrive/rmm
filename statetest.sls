@@ -1,6 +1,4 @@
-{% set defaultGateway = salt['ip.get_default_gateway']() %}
-
-default_gateway:
-  grains.present:
-    - value: {{defaultGateway}}
-    - fire_event: thrive/custom
+testing:
+  test.nop
+    - name: a test
+    - fire_event: thrive/event
