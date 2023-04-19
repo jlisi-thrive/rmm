@@ -24,4 +24,3 @@ snow_event:
         Accept: application/json
         Content-Type: application/json
     - data: '{{minionGrains}}'
-    - fire_event: thrive/minion_setup
