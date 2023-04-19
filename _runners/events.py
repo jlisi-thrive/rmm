@@ -1,3 +1,4 @@
+import json
 from azure.eventgrid import EventGridPublisherClient,EventGridEvent
 from azure.core.credentials import AzureKeyCredential
 
@@ -7,7 +8,7 @@ def jobs(data):
   credential = AzureKeyCredential(topicKey)
   client = EventGridPublisherClient(topicEndpoint, credential)
   event = EventGridEvent(
-      data=data,
+      data=json.dumps(data),
       subject="presence/minionfromrunner",
       event_type="minion_presence",
       data_version="1.0"
