@@ -5,9 +5,9 @@ from azure.servicebus import ServiceBusMessage
 from azure.eventgrid import EventGridPublisherClient,EventGridEvent
 from azure.core.credentials import AzureKeyCredential
 
-async def send_single_message(sender):
+async def send_single_message(sender, data):
     # Create a Service Bus message and send it to the queue
-    message = ServiceBusMessage(body="Test", subject="TestSubject")
+    message = ServiceBusMessage(body=json.dumps(data), subject="TestSubject")
     await sender.send_messages(message)
     print("Sent a single message")
               
@@ -19,7 +19,7 @@ async def sendTopic(data):
           logging_enable=True) as servicebus_client:
           sender = servicebus_client.get_topic_sender(topic_name=topicName)
           async with sender:
-              await send_single_message(sender)
+              await send_single_message(sender, data)
 
 def runTopic(data):
     asyncio.run(sendTopic(data))
