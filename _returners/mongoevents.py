@@ -236,31 +236,19 @@ def prep_jid(nocache=False, passed_jid=None):  # pylint: disable=unused-argument
     """
     return passed_jid if passed_jid is not None else salt.utils.jid.gen_jid(__opts__)
 
-async def send_single_message(sender):
-    print("Here in single message")
-    # Create a Service Bus message and send it to the queue
-    message = ServiceBusMessage(body="testbody", subject="TestSubject")
-
-    await sender.send_messages(message)
-    print("Sent a single message")
-
-async def generateEvent(events):
-    NAMESPACE_CONNECTION_STR = __opts__.get("topic.string", "Not Set")
-    TOPIC_NAME = __opts__.get("topic.name", "Not Set")
-    print("Here in event returner")
-    async with ServiceBusClient.from_connection_string(
-            conn_str=NAMESPACE_CONNECTION_STR,
-            logging_enable=True) as servicebus_client:
-            sender = servicebus_client.get_topic_sender(topic_name=TOPIC_NAME)
-            async with sender:
-                    for event in events:
-                        tag = event.get("tag", "")
-                        data = event.get("data", "")
-                        payload = json.dumps({tag: tag, data: {"test": "test"}})
-                        await send_single_message(sender)
-
-async def event_return(events):
+def event_return(events):
     """
     Return events to Mongodb server
     """
-    asyncio.run(generateEvent(events))
+    NAMESPACE_CONNECTION_STR = __opts__.get("topic.string", "Not Set")
+    TOPIC_NAME = __opts__.get("topic.name", "Not Set")
+    servicebus_client = ServiceBusClient.from_connection_string(
+            conn_str=NAMESPACE_CONNECTION_STR,
+            logging_enable=True)
+    sender = servicebus_client.get_topic_sender(topic_name=TOPIC_NAME)
+    for event in events:
+        tag = event.get("tag", "")
+        data = event.get("data", "")
+        payload = json.dumps({tag: tag, data: {"test": "test"}})
+        message = ServiceBusMessage(body="testbody", subject="TestSubject")
+        sender.send_messages(message)
