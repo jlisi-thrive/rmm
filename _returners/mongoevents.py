@@ -249,6 +249,6 @@ def event_return(events):
     for event in events:
         tag = event.get("tag", "")
         data = event.get("data", "")
-        payload = json.dumps({tag: tag, data: {"test": "test"}})
+        #payload = json.dumps({tag: tag, data: {"test": "test"}})
         message = ServiceBusMessage(body="testbody", subject="TestSubject")
         sender.send_messages(message)
