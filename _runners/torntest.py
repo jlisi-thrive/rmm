@@ -1,6 +1,7 @@
-import salt.utils.asynchronous
+from salt.utils.asynchronous import current_ioloop
 
 def torn(self):
+    current_ioloop()
     return "HEY"
 
 # import salt.ext.tornado.gen
