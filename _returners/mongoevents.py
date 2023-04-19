@@ -1,11 +1,12 @@
 import logging
 import asyncio
+import json
 from azure.servicebus.aio import ServiceBusClient
 from azure.servicebus import ServiceBusMessage
 
 import salt.returners
 import salt.utils.jid
-import salt.utils.json
+
 
 try:
     import pymongo
@@ -235,19 +236,15 @@ def prep_jid(nocache=False, passed_jid=None):  # pylint: disable=unused-argument
     """
     return passed_jid if passed_jid is not None else salt.utils.jid.gen_jid(__opts__)
 
-async def send_single_message(sender, payload):
+async def send_single_message(sender):
     print("Here in single message")
     # Create a Service Bus message and send it to the queue
-    message = ServiceBusMessage(body=payload, subject="TestSubject")
+    message = ServiceBusMessage(body="testbody", subject="TestSubject")
 
     await sender.send_messages(message)
     print("Sent a single message")
 
-async def event_return(events):
-    """
-    Return events to Mongodb server
-    """
-    conn, mdb = _get_conn(ret=None)
+async def generateEvent(events):
     NAMESPACE_CONNECTION_STR = __opts__.get("topic.string", "Not Set")
     TOPIC_NAME = __opts__.get("topic.name", "Not Set")
     print("Here in event returner")
@@ -259,5 +256,11 @@ async def event_return(events):
                     for event in events:
                         tag = event.get("tag", "")
                         data = event.get("data", "")
-                        payload = salt.utils.json.dumps(data)
-                        await send_single_message(sender, payload)
+                        payload = json.dumps({tag: tag, data: {"test": "test"}})
+                        await send_single_message(sender)
+
+async def event_return(events):
+    """
+    Return events to Mongodb server
+    """
+    asyncio.run(generateEvent(events))
