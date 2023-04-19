@@ -1,6 +1,6 @@
 from salt.utils.asynchronous import current_ioloop
 
-def torn(self):
+def torn():
     current_ioloop()
     return "HEY"
 
