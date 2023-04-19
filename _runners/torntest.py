@@ -9,4 +9,4 @@ def torn():
     # a generator is not allowed and you must use
     #   raise gen.Return(response.body)
     # instead.
-    return response.body
+    return "Works"
