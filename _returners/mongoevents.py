@@ -5,6 +5,7 @@ from azure.servicebus import ServiceBusMessage
 
 import salt.returners
 import salt.utils.jid
+import salt.utils.json
 
 try:
     import pymongo
