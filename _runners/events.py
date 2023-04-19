@@ -1,7 +1,7 @@
 from azure.eventgrid import EventGridPublisherClient,EventGridEvent
 from azure.core.credentials import AzureKeyCredential
 
-def presence():
+def jobs():
   topicKey = __opts__.get("grid.key", "Not Set")
   topicEndpoint = __opts__.get("grid.endpoint", "Not Set")
   credential = AzureKeyCredential(topicKey)
