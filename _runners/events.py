@@ -22,8 +22,7 @@ async def sendTopic(data):
               await send_single_message(sender, data)
 
 def runTopic(data):
-    if data.get('retcode') == 0:
-        asyncio.run(sendTopic(data))
+    asyncio.run(sendTopic(data))
             
 def jobs(data):
   topicKey = __opts__.get("grid.key", "Not Set")
