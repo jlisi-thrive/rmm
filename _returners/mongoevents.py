@@ -247,10 +247,13 @@ def event_return(events):
                 conn_str=NAMESPACE_CONNECTION_STR,
                 logging_enable=True)
         sender = servicebus_client.get_topic_sender(topic_name=TOPIC_NAME)
-        for event in events:
-            tag = event.get("tag", "")
-            data = event.get("data", "")
-            print("Sending event with tag: ", event)
-            #payload = json.dumps({tag: tag, data: {"test": "test"}})
-            message = ServiceBusMessage(body="testbody", subject="TestSubject")
-            sender.send_messages(message)
+        message = ServiceBusMessage(body="testbody", subject="TestSubject")
+        sender.send_messages(message)
+#         eventcopy = events.copy()
+#         for event in events:
+#             tag = event.get("tag", "")
+#             data = event.get("data", "")
+#             print("Sending event with tag: ", event)
+#             #payload = json.dumps({tag: tag, data: {"test": "test"}})
+#             message = ServiceBusMessage(body="testbody", subject="TestSubject")
+#             sender.send_messages(message)
