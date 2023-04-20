@@ -5,9 +5,9 @@ from azure.servicebus import ServiceBusMessage
 from azure.eventgrid import EventGridPublisherClient,EventGridEvent
 from azure.core.credentials import AzureKeyCredential
 
-async def send_single_message(sender, data):
+async def send_single_message(sender, data, subject):
     # Create a Service Bus message and send it to the queue
-    message = ServiceBusMessage(body=json.dumps(data), subject="TestSubject")
+    message = ServiceBusMessage(body=json.dumps(data), subject=subject)
     await sender.send_messages(message)
     print("Sent a single message")
               
@@ -19,33 +19,7 @@ async def sendTopic(data):
           logging_enable=True) as servicebus_client:
           sender = servicebus_client.get_topic_sender(topic_name=topicName)
           async with sender:
-              await send_single_message(sender, data)
+              await send_single_message(sender, data, subject)
 
-def runTopic(data):
-    asyncio.run(sendTopic(data))
-            
-def jobs(data):
-  topicKey = __opts__.get("grid.key", "Not Set")
-  topicEndpoint = __opts__.get("grid.endpoint", "Not Set")
-  credential = AzureKeyCredential(topicKey)
-  client = EventGridPublisherClient(topicEndpoint, credential)
-  event = EventGridEvent(
-      data=json.dumps(data),
-      subject="presence/minionfromrunner",
-      event_type="minion_presence",
-      data_version="1.0"
-  )
-  return client.send(event)
-
-def minionSetup(data):
-  topicKey = __opts__.get("grid.key", "Not Set")
-  topicEndpoint = __opts__.get("grid.endpoint", "Not Set")
-  credential = AzureKeyCredential(topicKey)
-  client = EventGridPublisherClient(topicEndpoint, credential)
-  event = EventGridEvent(
-      data=json.dumps(data),
-      subject="presence/fromcustomevent",
-      event_type="minion_presence",
-      data_version="1.0"
-  )
-  return client.send(event)
+def runTopic(data, subject):
+    asyncio.run(sendTopic(data, subject))
