@@ -56,11 +56,12 @@ def _get_options(ret=None):
     )
     return _options
 
+
 def _get_conn(ret):
     """
     Return a mongodb connection object
     """
-    #_options = _get_options(ret)
+    # _options = _get_options(ret)
 
     uri = __opts__.get("mongo.uri", "Not Set")
 
@@ -234,11 +235,20 @@ def prep_jid(nocache=False, passed_jid=None):  # pylint: disable=unused-argument
     """
     return passed_jid if passed_jid is not None else salt.utils.jid.gen_jid(__opts__)
 
-def send_event_data_batch(producer):
+
+def send_event_data_batch(producer, events):
     event_data_batch = producer.create_batch()
-    event_data_batch.add(
-        EventData(body=json.dumps({"id": "test", "event_type": "test", "data": "eventdata"})))
+    for event in events:
+        event_data_batch.add(EventData(body=json.dumps(event)))
     producer.send_batch(event_data_batch)
+
+
+def send_single_event(producer, event):
+    event_data = producer.create_batch()
+    event_data.add(
+        EventData(body=json.dumps(event)))
+    producer.send_batch(event_data)
+
 
 def event_return(events):
     """
@@ -248,5 +258,12 @@ def event_return(events):
     EVENT_HUB_NAME = __opts__.get("hub.name", "Not Set")
     producer = EventHubProducerClient.from_connection_string(
         conn_str=EVENT_HUB_CONNECTION_STR, eventhub_name=EVENT_HUB_NAME)
-    with producer:
-        send_event_data_batch(producer)
+
+    if isinstance(events, list):
+        events = events[0]
+        with producer:
+            send_single_event(producer, events)
+
+    if isinstance(events, dict):
+        with producer:
+            send_event_data_batch(producer, events)
