@@ -1,7 +1,6 @@
 import logging
 import json
-from azure.servicebus.aio import ServiceBusClient
-from azure.servicebus import ServiceBusMessage
+from azure.eventhub import EventHubProducerClient, EventData
 
 import salt.returners
 import salt.utils.jid
@@ -235,32 +234,19 @@ def prep_jid(nocache=False, passed_jid=None):  # pylint: disable=unused-argument
     """
     return passed_jid if passed_jid is not None else salt.utils.jid.gen_jid(__opts__)
 
+def send_event_data_batch(producer):
+    event_data_batch = producer.create_batch()
+    event_data_batch.add(
+        EventData(body=json.dumps({"id": "test", "event_type": "test", "data": "eventdata"})))
+    producer.send_batch(event_data_batch)
+
 def event_return(events):
     """
     Return events to Mongodb server
     """
-    NAMESPACE_CONNECTION_STR = __opts__.get("topic.string", "Not Set")
-    TOPIC_NAME = __opts__.get("topic.name", "Not Set")
-    try:
-        servicebus_client = ServiceBusClient.from_connection_string(
-                conn_str=NAMESPACE_CONNECTION_STR,
-                logging_enable=True)
-        sender = servicebus_client.get_topic_sender(topic_name=TOPIC_NAME)
-        message = ServiceBusMessage(body="testbody", subject="TestSubject")
-        sender.send_messages(message)
-    except:
-        return False
-
-    return True
-    # if isinstance(events, dict):
-        # servicebus_client = ServiceBusClient.from_connection_string(
-        #         conn_str=NAMESPACE_CONNECTION_STR,
-        #         logging_enable=True)
-        # sender = servicebus_client.get_topic_sender(topic_name=TOPIC_NAME)
-        # for event in events:
-        #     tag = event.get("tag", "")
-        #     data = event.get("data", "")
-        #     print("Sending event with tag: ", event)
-        #     #payload = json.dumps({tag: tag, data: {"test": "test"}})
-        #     message = ServiceBusMessage(body="testbody", subject="TestSubject")
-        #     sender.send_messages(message)
+    EVENT_HUB_CONNECTION_STR = __opts__.get("hub.string", "Not Set")
+    EVENT_HUB_NAME = __opts__.get("hub.name", "Not Set")
+    producer = EventHubProducerClient.from_connection_string(
+        conn_str=EVENT_HUB_CONNECTION_STR, eventhub_name=EVENT_HUB_NAME)
+    with producer:
+        send_event_data_batch(producer)
