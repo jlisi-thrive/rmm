@@ -4,3 +4,4 @@ send_event:
   runner.events.runTopic:
     - args:
       - data: {{ eventData }}
+      - subject: "job_data"
