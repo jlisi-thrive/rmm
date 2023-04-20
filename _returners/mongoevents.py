@@ -241,17 +241,16 @@ def event_return(events):
     """
     NAMESPACE_CONNECTION_STR = __opts__.get("topic.string", "Not Set")
     TOPIC_NAME = __opts__.get("topic.name", "Not Set")
-    print("In event return here")
-    print(TOPIC_NAME)
-    print(NAMESPACE_CONNECTION_STR)
-    servicebus_client = ServiceBusClient.from_connection_string(
-            conn_str=NAMESPACE_CONNECTION_STR,
-            logging_enable=True)
-    sender = servicebus_client.get_topic_sender(topic_name=TOPIC_NAME)
-    for event in events:
-        tag = event.get("tag", "")
-        data = event.get("data", "")
-        print("Sending event with tag: ", event)
-        #payload = json.dumps({tag: tag, data: {"test": "test"}})
-        message = ServiceBusMessage(body="testbody", subject="TestSubject")
-        sender.send_messages(message)
+
+    if isinstance(events, dict):
+        servicebus_client = ServiceBusClient.from_connection_string(
+                conn_str=NAMESPACE_CONNECTION_STR,
+                logging_enable=True)
+        sender = servicebus_client.get_topic_sender(topic_name=TOPIC_NAME)
+        for event in events:
+            tag = event.get("tag", "")
+            data = event.get("data", "")
+            print("Sending event with tag: ", event)
+            #payload = json.dumps({tag: tag, data: {"test": "test"}})
+            message = ServiceBusMessage(body="testbody", subject="TestSubject")
+            sender.send_messages(message)
