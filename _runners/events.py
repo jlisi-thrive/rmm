@@ -11,7 +11,7 @@ async def send_single_message(sender, data, subject):
     await sender.send_messages(message)
     print("Sent a single message")
               
-async def sendTopic(data):
+async def sendTopic(data, subject):
   topicConnection = __opts__.get("topic.string", "Not Set")
   topicName = __opts__.get("topic.name", "Not Set")
   async with ServiceBusClient.from_connection_string(
