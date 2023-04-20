@@ -244,10 +244,7 @@ def send_event_data_batch(producer, events):
 
 
 def send_single_event(producer, event):
-    event_data = producer.create_batch()
-    event_data.add(
-        EventData(body=json.dumps(event)))
-    producer.send_batch(event_data)
+    producer.send_event(EventData(body=json.dumps(event)))
 
 
 def event_return(events):
