@@ -275,7 +275,7 @@ def send_event(event):
     event_data.content_type = "application/json"
     event_data.message_id = jid
     with producer:
-        producer.send_event(EventData(body=json.dumps(event)))
+        producer.send_event(EventData(body=json.dumps(event_data)))
 
 
 def send_batch(events):
