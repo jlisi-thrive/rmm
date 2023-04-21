@@ -235,6 +235,8 @@ def prep_jid(nocache=False, passed_jid=None):  # pylint: disable=unused-argument
     """
     return passed_jid if passed_jid is not None else salt.utils.jid.gen_jid(__opts__)
 
+# TODO:: Send to appropriate event hubs based on tag of event
+
 
 def send_event_data_batch(producer, events):
     event_data_batch = producer.create_batch()
@@ -242,25 +244,51 @@ def send_event_data_batch(producer, events):
         event_data_batch.add(EventData(body=json.dumps(event)))
     producer.send_batch(event_data_batch)
 
+# TODO:: Send to appropriate event hubs based on tag of event
+# TODO:: Maybe create the event hub if non existing. Read from config?
+
 
 def send_single_event(producer, event):
     producer.send_event(EventData(body=json.dumps(event)))
+
+
+def send_event(event):
+    EVENT_HUB_CONNECTION_STR = __opts__.get("hub.string", "Not Set")
+    EVENT_HUB_NAME = __opts__.get("hub.name", "Not Set")
+    MINION_PRESENCE_HUB = __opts__.get("presence.hub", "Not Set")
+    tag, data = event["tag"], event["data"]
+
+    HUB_NAME = MINION_PRESENCE_HUB if tag == "salt/presence/present" else EVENT_HUB_NAME
+
+    producer = EventHubProducerClient.from_connection_string(
+        conn_str=EVENT_HUB_CONNECTION_STR, eventhub_name=HUB_NAME)
+
+    with producer:
+        producer.send_event(EventData(body=json.dumps(event)))
+
+
+def send_batch(events):
+    for event in events:
+        send_event(event)
 
 
 def event_return(events):
     """
     Return events to Mongodb server
     """
-    EVENT_HUB_CONNECTION_STR = __opts__.get("hub.string", "Not Set")
-    EVENT_HUB_NAME = __opts__.get("hub.name", "Not Set")
-    producer = EventHubProducerClient.from_connection_string(
-        conn_str=EVENT_HUB_CONNECTION_STR, eventhub_name=EVENT_HUB_NAME)
-
     if isinstance(events, list):
         events = events[0]
-        with producer:
-            send_single_event(producer, events)
+        send_event(events)
 
     if isinstance(events, dict):
-        with producer:
-            send_event_data_batch(producer, events)
+        send_batch(events)
+    # if isinstance(events, list):
+    #     events = events[0]
+    #     producer = EventHubProducerClient.from_connection_string(
+    #         conn_str=EVENT_HUB_CONNECTION_STR, eventhub_name=EVENT_HUB_NAME)
+    #     with producer:
+    #         send_single_event(producer, events)
+
+    # if isinstance(events, dict):
+    #     with producer:
+    #         send_event_data_batch(producer, events)
