@@ -1,4 +1,4 @@
-Testing This:
+human_friendly_state_id:
   mycompany/mystaterun/status/update:
     event.send:
       - data:
