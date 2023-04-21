@@ -46,7 +46,7 @@ def on_error(partition_context, error):
         print("An exception: {} occurred during the load balance process.".format(error))
 
 
-def start(queue=None, profile=None, tag="azure/eventhub/rmm", owner_acct_id=None):
+def start():
     fire_master = salt.utils.event.get_master_event(
         __opts__, __opts__["sock_dir"], listen=False
     ).fire_event
