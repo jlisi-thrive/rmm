@@ -3,6 +3,7 @@ import json
 from enum import Enum
 from azure.eventhub import EventHubProducerClient, EventData
 
+import uuid
 import salt.returners
 import salt.utils.jid
 
@@ -264,12 +265,15 @@ def send_single_event(producer, event):
 def send_event(event):
     EVENT_HUB_CONNECTION_STR = __opts__.get("hub.string", "Not Set")
     tag, data = event["tag"], event["data"]
+    jid = data["jid"] if data.__contains__('a') else uuid.uuid4()
 
     HUB_NAME = return_hub(tag)
 
     producer = EventHubProducerClient.from_connection_string(
         conn_str=EVENT_HUB_CONNECTION_STR, eventhub_name=HUB_NAME)
-
+    event_data = EventData(body=json.dumps(event))
+    event_data.message_id = jid
+    event_data.properties = {"testprop": "testvalue"}
     with producer:
         producer.send_event(EventData(body=json.dumps(event)))
 
