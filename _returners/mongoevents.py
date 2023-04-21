@@ -272,8 +272,8 @@ def send_event(event):
     producer = EventHubProducerClient.from_connection_string(
         conn_str=EVENT_HUB_CONNECTION_STR, eventhub_name=HUB_NAME)
     event_data = EventData(body=json.dumps(event))
+    event_data.content_type = "application/json"
     event_data.message_id = jid
-    event_data.properties = {"testprop": "testvalue"}
     with producer:
         producer.send_event(EventData(body=json.dumps(event)))
 
