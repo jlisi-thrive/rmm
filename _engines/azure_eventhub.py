@@ -54,7 +54,7 @@ def start():
     EVENT_HUB_CONNECTION_STR = __opts__.get("hub.string", "Not Set")
     consumer_client = EventHubConsumerClient.from_connection_string(
         conn_str=EVENT_HUB_CONNECTION_STR,
-        consumer_group='$Default',
+        consumer_group='saltstack',
         eventhub_name="rmm-events",
     )
 
