@@ -20,19 +20,19 @@ __virtualname__ = "azure_eventhub"
 def on_event(partition_context, event):
     # Put your code here.
     # If the operation is i/o intensive, multi-thread will have better performance.
-    print("Received event from partition: {}.".format(
+    log.debug("Received event from partition: {}.".format(
         partition_context.partition_id))
 
 
 def on_partition_initialize(partition_context):
     # Put your code here.
-    print("Partition: {} has been initialized.".format(
+    log.debug("Partition: {} has been initialized.".format(
         partition_context.partition_id))
 
 
 def on_partition_close(partition_context, reason):
     # Put your code here.
-    print("Partition: {} has been closed, reason for closing: {}.".format(
+    log.debug("Partition: {} has been closed, reason for closing: {}.".format(
         partition_context.partition_id,
         reason
     ))
@@ -41,12 +41,13 @@ def on_partition_close(partition_context, reason):
 def on_error(partition_context, error):
     # Put your code here. partition_context can be None in the on_error callback.
     if partition_context:
-        print("An exception: {} occurred during receiving from Partition: {}.".format(
+        log.debug("An exception: {} occurred during receiving from Partition: {}.".format(
             partition_context.partition_id,
             error
         ))
     else:
-        print("An exception: {} occurred during the load balance process.".format(error))
+        log.debug(
+            "An exception: {} occurred during the load balance process.".format(error))
 
 
 def start():
@@ -60,7 +61,7 @@ def start():
         consumer_group='saltstack',
         eventhub_name="rmm-events",
     )
-    print('Consumer will keep receiving for {} seconds, start time is {}.'.format(
+    log.debug('Consumer will keep receiving for {} seconds, start time is {}.'.format(
         RECEIVE_DURATION, time.time()))
 
     try:
@@ -81,6 +82,6 @@ def start():
         consumer_client.close()
         thread.join()
     except KeyboardInterrupt:
-        print('Stop receiving.')
+        log.debug('Stop receiving.')
 
-    print('Consumer has stopped receiving, end time is {}.'.format(time.time()))
+    log.debug('Consumer has stopped receiving, end time is {}.'.format(time.time()))
