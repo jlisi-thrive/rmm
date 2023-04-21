@@ -1,5 +1,5 @@
 human_friendly_state_id:
-  - event.send:
+  event.send:
     - tag: thrive/custom
     - data:
-        - status: "Half-way through the state run!"
+        status: "Half-way through the state run!"
