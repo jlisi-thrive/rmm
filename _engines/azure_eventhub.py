@@ -12,7 +12,7 @@ def __virtual__():
     return True
 
 
-log = logging.getLogger(__name__)
+log = logging.getLogger("azure_eventhub")
 
 __virtualname__ = "azure_eventhub"
 
