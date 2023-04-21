@@ -1,5 +1,6 @@
 import logging
 import json
+from enum import Enum
 from azure.eventhub import EventHubProducerClient, EventData
 
 import salt.returners
@@ -235,9 +236,17 @@ def prep_jid(nocache=False, passed_jid=None):  # pylint: disable=unused-argument
     """
     return passed_jid if passed_jid is not None else salt.utils.jid.gen_jid(__opts__)
 
+
+def return_hub(tag):
+    if tag == "salt/presence/present":
+        return "minion-presence"
+    elif tag == "salt/presence/change":
+        return "minion-presence"
+    else:
+        return "rmm-events"
+
+
 # TODO:: Send to appropriate event hubs based on tag of event
-
-
 def send_event_data_batch(producer, events):
     event_data_batch = producer.create_batch()
     for event in events:
@@ -254,11 +263,9 @@ def send_single_event(producer, event):
 
 def send_event(event):
     EVENT_HUB_CONNECTION_STR = __opts__.get("hub.string", "Not Set")
-    EVENT_HUB_NAME = __opts__.get("hub.name", "Not Set")
-    MINION_PRESENCE_HUB = __opts__.get("presence.hub", "Not Set")
     tag, data = event["tag"], event["data"]
 
-    HUB_NAME = MINION_PRESENCE_HUB if tag == "salt/presence/present" else EVENT_HUB_NAME
+    HUB_NAME = return_hub(tag)
 
     producer = EventHubProducerClient.from_connection_string(
         conn_str=EVENT_HUB_CONNECTION_STR, eventhub_name=HUB_NAME)
