@@ -23,10 +23,10 @@ __virtualname__ = "azure_eventhub"
 def on_event(partition_context, event: EventData):
     # Put your code here.
     # If the operation is i/o intensive, multi-thread will have better performance.
-
+    eventBody = event.body_as_json()
     log.debug("Received event from partition: {}.".format(
         partition_context.partition_id))
-    print(event.body_as_str())
+    print(json.dumps(eventBody))
 
 
 def on_partition_initialize(partition_context):
