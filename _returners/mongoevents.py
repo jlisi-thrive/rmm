@@ -244,8 +244,8 @@ def return_hub(tag):
         return "minion-presence"
     elif tag == "salt/presence/change":
         return "minion-presence"
-    elif tag == "thrive/process/event":
-        return "process-events"
+    # elif tag == "thrive/process/event":
+    #     return "process-events"
     else:
         return "rmm-events"
 
