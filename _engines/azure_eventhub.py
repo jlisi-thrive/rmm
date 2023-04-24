@@ -1,6 +1,4 @@
 import logging
-import threading
-import time
 import json
 import salt.utils.event
 import salt.utils.json
@@ -74,27 +72,29 @@ def start():
         eventhub_name="rmm-events",
         checkpoint_store=checkpoint_store
     )
-    log.debug('Consumer will keep receiving for {} seconds, start time is {}.'.format(
-        RECEIVE_DURATION, time.time()))
+    log.debug('Consumer will keep receiving')
 
     try:
-        thread = threading.Thread(
-            target=consumer_client.receive,
-            kwargs={
-                "on_event": on_event,
-                "on_partition_initialize": on_partition_initialize,
-                "on_partition_close": on_partition_close,
-                "on_error": on_error,
-                # "-1" is from the beginning of the partition.
-                "starting_position": "-1",
-            }
-        )
-        thread.daemon = True
-        thread.start()
-        time.sleep(RECEIVE_DURATION)
-        consumer_client.close()
-        thread.join()
+        with consumer_client:
+            consumer_client.receive(
+                on_event=on_event,
+                starting_position="-1",
+            )
+        # thread = threading.Thread(
+        #     target=consumer_client.receive,
+        #     kwargs={
+        #         "on_event": on_event,
+        #         "on_partition_initialize": on_partition_initialize,
+        #         "on_partition_close": on_partition_close,
+        #         "on_error": on_error,
+        #         # "-1" is from the beginning of the partition.
+        #         "starting_position": "-1",
+        #     }
+        # )
+        # thread.daemon = True
+        # thread.start()
+        # time.sleep(RECEIVE_DURATION)
+        # consumer_client.close()
+        # thread.join()
     except KeyboardInterrupt:
         log.debug('Stop receiving.')
-
-    log.debug('Consumer has stopped receiving, end time is {}.'.format(time.time()))
