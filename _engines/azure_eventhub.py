@@ -25,7 +25,7 @@ def on_event(partition_context, event):
     # If the operation is i/o intensive, multi-thread will have better performance.
     log.debug("Received event from partition: {}.".format(
         partition_context.partition_id))
-    log.debug("Event Data: " + event)
+    log.debug("Event Data: " + event.body)
 
 
 def on_partition_initialize(partition_context):
