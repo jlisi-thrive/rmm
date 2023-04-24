@@ -26,7 +26,7 @@ def on_event(partition_context, event):
 
     log.debug("Received event from partition: {}.".format(
         partition_context.partition_id))
-    # print(event)
+    print(event)
 
 
 def on_partition_initialize(partition_context):

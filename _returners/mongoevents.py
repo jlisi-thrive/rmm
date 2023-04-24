@@ -268,16 +268,16 @@ def send_event(event):
     tag, data = event["tag"], event["data"]
     jid = data["jid"] if data.__contains__('a') else uuid.uuid4()
     log.critical("From Event Manager")
-    log.critical(data)
+    # log.critical(data)
     HUB_NAME = return_hub(tag)
     host = socket.gethostname()
     producer = EventHubProducerClient.from_connection_string(
         conn_str=EVENT_HUB_CONNECTION_STR, eventhub_name=HUB_NAME)
 
-    event_data = EventData(body=json.dumps(event))
-    event_data.properties = {"master": host}
-    # event_data.content_type = "application/json"
-    # event_data.message_id = jid
+    event_data = EventData(body={tag: tag, data: data, jid: jid})
+    event_data.message_id = jid
+    event_data.properties = {"master": host, jid: jid}
+    event_data.content_type = "application/json"
     with producer:
         producer.send_event(event_data)
 
