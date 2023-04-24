@@ -26,7 +26,7 @@ def on_event(partition_context, event: EventData):
     eventBody = event.body_as_json()
     log.debug("Received event from partition: {}.".format(
         partition_context.partition_id))
-    # print(json.dumps(eventBody))
+    log.critical(json.dumps(eventBody))
 
 
 def on_partition_initialize(partition_context):
