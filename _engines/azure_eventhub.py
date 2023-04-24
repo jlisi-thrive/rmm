@@ -72,7 +72,7 @@ def start():
         eventhub_name="rmm-events",
         checkpoint_store=checkpoint_store
     )
-    log.debug('Consumer will keep receiving')
+    log.critical('Consumer will keep receiving')
 
     try:
         with consumer_client:
@@ -97,4 +97,4 @@ def start():
         # consumer_client.close()
         # thread.join()
     except KeyboardInterrupt:
-        log.debug('Stop receiving.')
+        log.critical('Stop receiving.')
