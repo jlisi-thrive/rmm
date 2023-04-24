@@ -244,8 +244,8 @@ def return_hub(tag):
         return "minion-presence"
     elif tag == "salt/presence/change":
         return "minion-presence"
-    # elif tag == "thrive/process/event":
-    #     return "process-events"
+    elif tag == "thrive/process/event":
+        return "process-events"
     else:
         return "rmm-events"
 
@@ -276,7 +276,7 @@ def send_event(event):
         conn_str=EVENT_HUB_CONNECTION_STR, eventhub_name=HUB_NAME)
 
     event_data = EventData(
-        {"tag": tag, "data": data, "master": FQDN_MASTER, "host": SOCKET_MASTER})
+        json.dumps({"tag": tag, "data": data, "master": FQDN_MASTER, "host": SOCKET_MASTER}))
     event_data.content_type = "application/json"
     with producer:
         producer.send_event(event_data)

@@ -23,8 +23,8 @@ __virtualname__ = "azure_eventhub"
 def on_event(partition_context, event: EventData):
     # Put your code here.
     # If the operation is i/o intensive, multi-thread will have better performance.
-    eventBody = event.body_as_json()
-    log.critical(json.dumps(eventBody))
+    # eventBody = event.body_as_json()
+    # log.critical(json.dumps(eventBody))
     # Example of how this could call a particular function
     # opts = salt.config.master_config('/etc/salt/master')
     # runner = salt.runner.RunnerClient(opts)
