@@ -24,9 +24,10 @@ def on_event(partition_context, event: EventData):
     # Put your code here.
     # If the operation is i/o intensive, multi-thread will have better performance.
     eventBody = event.body_as_json()
+
     log.debug("Received event from partition: {}.".format(
         partition_context.partition_id))
-    log.critical(json.dumps(eventBody))
+    log.critical(event.properties)
 
 
 def on_partition_initialize(partition_context):

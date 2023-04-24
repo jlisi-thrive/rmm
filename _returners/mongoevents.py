@@ -276,7 +276,8 @@ def send_event(event):
     event_data = EventData(
         {"tag": tag, "data": data, "master": FQDN_MASTER, "host": SOCKET_MASTER})
     event_data.content_type = "application/json"
-
+    event_data.properties = json.dumps(
+        {"master": FQDN_MASTER, "host": SOCKET_MASTER})
     with producer:
         producer.send_event(event_data)
 
