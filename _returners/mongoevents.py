@@ -270,6 +270,9 @@ def send_event(event):
     jid = data["jid"] if data.__contains__('a') else uuid.uuid4()
     log.critical("From Event Manager")
     # log.critical(data)
+    SOCKET_MASTER = socket.gethostname()
+    log.critical("Socket Host is:")
+    log.critical(SOCKET_MASTER)
     HUB_NAME = return_hub(tag)
 
     log.critical("Master is: ")
