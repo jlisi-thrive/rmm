@@ -27,7 +27,7 @@ def on_event(partition_context, event: EventData):
     log.critical(json.dumps(eventBody))
     opts = salt.config.master_config('/etc/salt/master')
     runner = salt.runner.RunnerClient(opts)
-    runner.cmd('jobs.list_jobs', [])
+    runner.cmd('fileserver.update', [])
     log.debug("Received event from partition: {}.".format(
         partition_context.partition_id))
 
