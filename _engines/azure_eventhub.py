@@ -25,6 +25,9 @@ def on_event(partition_context, event: EventData):
     # If the operation is i/o intensive, multi-thread will have better performance.
     eventBody = event.body_as_json()
     log.critical(json.dumps(eventBody))
+    opts = salt.config.master_config('/etc/salt/master')
+    runner = salt.runner.RunnerClient(opts)
+    runner.cmd('jobs.list_jobs', [])
     log.debug("Received event from partition: {}.".format(
         partition_context.partition_id))
 
@@ -56,9 +59,6 @@ def on_error(partition_context, error):
 
 
 def start():
-    fire_master = salt.utils.event.get_master_event(
-        __opts__, __opts__["sock_dir"], listen=False
-    ).fire_event
     log.critical("Started Event Hub")
     EVENT_HUB_CONNECTION_STR = __opts__.get("hub.string", "Not Set")
     consumer_client = EventHubConsumerClient.from_connection_string(
