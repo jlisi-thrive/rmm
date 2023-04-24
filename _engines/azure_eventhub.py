@@ -4,7 +4,7 @@ import time
 import json
 import salt.utils.event
 import salt.utils.json
-from azure.eventhub import EventHubConsumerClient
+from azure.eventhub import EventHubConsumerClient, EventData
 
 RECEIVE_DURATION = 15
 
@@ -20,12 +20,13 @@ log = logging.getLogger("azure_eventhub")
 __virtualname__ = "azure_eventhub"
 
 
-def on_event(partition_context, event):
+def on_event(partition_context, event: EventData):
     # Put your code here.
     # If the operation is i/o intensive, multi-thread will have better performance.
     log.debug("Received event from partition: {}.".format(
         partition_context.partition_id))
-    log.debug("Event Data: " + event.body)
+    log.debug("Event Data: ")
+    log.debug(json.dumps(event.body))
 
 
 def on_partition_initialize(partition_context):
