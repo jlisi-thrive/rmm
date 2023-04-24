@@ -65,7 +65,7 @@ def start():
     consumer_client = EventHubConsumerClient.from_connection_string(
         conn_str=EVENT_HUB_CONNECTION_STR,
         consumer_group='$Default',
-        eventhub_name="process-events",
+        eventhub_name="rmm-events",
     )
     log.debug('Consumer will keep receiving for {} seconds, start time is {}.'.format(
         RECEIVE_DURATION, time.time()))
