@@ -25,9 +25,10 @@ def on_event(partition_context, event: EventData):
     # If the operation is i/o intensive, multi-thread will have better performance.
     eventBody = event.body_as_json()
     log.critical(json.dumps(eventBody))
-    opts = salt.config.master_config('/etc/salt/master')
-    runner = salt.runner.RunnerClient(opts)
-    runner.cmd('fileserver.update', [])
+    # Example of how this could call a particular function
+    # opts = salt.config.master_config('/etc/salt/master')
+    # runner = salt.runner.RunnerClient(opts)
+    # runner.cmd('fileserver.update', [])
     log.debug("Received event from partition: {}.".format(
         partition_context.partition_id))
 
