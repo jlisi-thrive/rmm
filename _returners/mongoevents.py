@@ -269,7 +269,6 @@ def send_event(event):
     jid = data["jid"] if data.__contains__('a') else uuid.uuid4()
     log.critical("From Event Manager")
     log.critical(data)
-    log.critical(tag)
     HUB_NAME = return_hub(tag)
     host = socket.gethostname()
     producer = EventHubProducerClient.from_connection_string(
