@@ -24,10 +24,8 @@ def on_event(partition_context, event: EventData):
     # Put your code here.
     # If the operation is i/o intensive, multi-thread will have better performance.
     eventBody = event.body_as_json()
-
     log.debug("Received event from partition: {}.".format(
         partition_context.partition_id))
-    log.critical(event.properties)
 
 
 def on_partition_initialize(partition_context):
@@ -65,7 +63,7 @@ def start():
     consumer_client = EventHubConsumerClient.from_connection_string(
         conn_str=EVENT_HUB_CONNECTION_STR,
         consumer_group='saltstack',
-        eventhub_name="rmm-events",
+        eventhub_name="process-events",
     )
     log.debug('Consumer will keep receiving for {} seconds, start time is {}.'.format(
         RECEIVE_DURATION, time.time()))
