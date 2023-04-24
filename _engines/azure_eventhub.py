@@ -1,6 +1,7 @@
 import logging
 import threading
 import time
+import json
 import salt.utils.event
 import salt.utils.json
 from azure.eventhub import EventHubConsumerClient
@@ -14,6 +15,8 @@ def __virtual__():
 
 log = logging.getLogger("azure_eventhub")
 
+# logging.basicConfig(filename='example.log', encoding='utf-8', level=logging.DEBUG)
+
 __virtualname__ = "azure_eventhub"
 
 
@@ -22,6 +25,7 @@ def on_event(partition_context, event):
     # If the operation is i/o intensive, multi-thread will have better performance.
     log.debug("Received event from partition: {}.".format(
         partition_context.partition_id))
+    log.debug("Event Data: " + json.dumps(event))
 
 
 def on_partition_initialize(partition_context):
