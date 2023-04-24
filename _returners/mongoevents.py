@@ -270,7 +270,7 @@ def send_event(event):
     log.critical("From Event Manager")
     # log.critical(data)
     HUB_NAME = return_hub(tag)
-    master = socket.gethostname()
+    master = __opts__.get("fqdn", "Not Set")
     log.critical("Master is: ", master)
     producer = EventHubProducerClient.from_connection_string(
         conn_str=EVENT_HUB_CONNECTION_STR, eventhub_name=HUB_NAME)
