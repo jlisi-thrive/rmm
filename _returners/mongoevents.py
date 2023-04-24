@@ -271,6 +271,7 @@ def send_event(event):
     # log.critical(data)
     HUB_NAME = return_hub(tag)
     master = socket.gethostname()
+    log.critical("Master is: ", master)
     producer = EventHubProducerClient.from_connection_string(
         conn_str=EVENT_HUB_CONNECTION_STR, eventhub_name=HUB_NAME)
 
