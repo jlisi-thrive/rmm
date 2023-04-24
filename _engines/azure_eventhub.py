@@ -14,7 +14,7 @@ def __virtual__():
 
 
 log = logging.getLogger("azure_eventhub")
-log.setLevel(5)
+
 # logging.basicConfig(filename='example.log', encoding='utf-8', level=logging.DEBUG)
 
 __virtualname__ = "azure_eventhub"
@@ -23,6 +23,7 @@ __virtualname__ = "azure_eventhub"
 def on_event(partition_context, event):
     # Put your code here.
     # If the operation is i/o intensive, multi-thread will have better performance.
+
     log.debug("Received event from partition: {}.".format(
         partition_context.partition_id))
     print(event)
@@ -58,7 +59,7 @@ def start():
     fire_master = salt.utils.event.get_master_event(
         __opts__, __opts__["sock_dir"], listen=False
     ).fire_event
-
+    log.critical("Started Event Hub")
     EVENT_HUB_CONNECTION_STR = __opts__.get("hub.string", "Not Set")
     consumer_client = EventHubConsumerClient.from_connection_string(
         conn_str=EVENT_HUB_CONNECTION_STR,
