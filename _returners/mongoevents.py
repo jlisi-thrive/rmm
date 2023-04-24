@@ -270,14 +270,13 @@ def send_event(event):
     log.critical("From Event Manager")
     # log.critical(data)
     HUB_NAME = return_hub(tag)
-    host = socket.gethostname()
+    master = socket.gethostname()
     producer = EventHubProducerClient.from_connection_string(
         conn_str=EVENT_HUB_CONNECTION_STR, eventhub_name=HUB_NAME)
 
-    event_data = EventData({tag: tag, data: data, host: host})
-    event_data.message_id = jid
+    event_data = EventData({tag: tag, data: data, master: master})
     event_data.content_type = "application/json"
-    event_data.properties = json.dumps({"master": host})
+
     with producer:
         producer.send_event(event_data)
 
