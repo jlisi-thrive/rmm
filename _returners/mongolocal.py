@@ -626,3 +626,13 @@ def load_reg():
     except Exception:  # pylint: disable=broad-except
         log.error("Could not write to msgpack file %s", __opts__["outdir"])
         raise
+
+
+def event_return(events):
+    log.critical(events[0]["data"])
+
+    if isinstance(events, list):
+        events = events[0]
+
+    if isinstance(events, dict):
+        events = events
