@@ -631,6 +631,12 @@ def load_reg():
 def event_return(events):
     log.critical(events[0]["tag"])
 
+    # Example of minion_setup run with state events
+    # salt/job/20230425143229977937/prog/ALM-B8GZKM3.almllc.local/1
+    # salt/job/20230425143229977937/prog/ALM-B8GZKM3.almllc.local/2
+    # salt/job/20230425143229977937/prog/ALM-B8GZKM3.almllc.local/3
+    # FINAL:: salt/job/20230425143229977937/ret/ALM-B8GZKM3.almllc.local
+
     if isinstance(events, list):
         events = events[0]
 

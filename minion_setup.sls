@@ -6,15 +6,17 @@
 default_gateway:
   grains.present:
     - value: {{defaultGateway}}
-    - fire_event: True
+    - fire_event: thrive/minion_setup/1-4
 
 sync_modules:
   saltutil.sync_modules:
     - refresh: True
+    - fire_event: thrive/minion_setup/2-4
     
 pingparsing:
   pip.installed:
     - name: pingparsing
+    - fire_event: thrive/minion_setup/3-4
     
 snow_event:
   http.query:
@@ -25,3 +27,4 @@ snow_event:
         Accept: application/json
         Content-Type: application/json
     - data: '{{minionGrains}}'
+    - fire_event: thrive/minion_setup/4-4
