@@ -181,10 +181,12 @@ def returner(load):
     else:
         full_ret = load
 
+    ts = time.time()
     sdata = {
         "minion": load["id"],
         "jid": load["jid"],
         "return": back,
+        "timestamp": ts,
         "fun": load["fun"],
         "full_ret": full_ret,
     }
