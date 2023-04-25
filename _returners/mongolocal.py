@@ -656,7 +656,7 @@ def event_return(events):
                 mdb.jobs.update_one({"jid": jid}, {
                     "$set": {
                         "jid": jid,
-                        "minion": minion,
+                        "minionId": minion,
                         "updated": ts,
                         "progress": progress
                     },
@@ -681,7 +681,7 @@ def event_return(events):
                     mdb.jobs.update_one({"jid": jid}, {
                         "$set": {
                             "jid": jid,
-                            "minion": minion,
+                            "minionId": minion,
                             "updated": ts,
                             "progress": progress
                         },
