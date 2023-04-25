@@ -202,16 +202,16 @@ def returner(load):
         "fun": load["fun"],
         "updated": ts
     }}
-    mdb.jobs.update_one({"jid": load["jid"]}, {
-        "$set": {
-            "jid": load["jid"],
-            "fun": load["fun"],
-            "updated": ts
-        },
-        "$push": {
-            "jobs": sdata
-        }
-    }, upsert=True)
+    # mdb.jobs.update_one({"jid": load["jid"]}, {
+    #     "$set": {
+    #         "jid": load["jid"],
+    #         "fun": load["fun"],
+    #         "updated": ts
+    #     },
+    #     "$push": {
+    #         "jobs": sdata
+    #     }
+    # }, upsert=True)
     # mdb.jobs.update_one({"jid": load["jid"]}, {"$push": {
     #     "jobs": sdata
     # }}, upsert=False)
@@ -636,11 +636,55 @@ def event_return(events):
     # salt/state_result/20230425143741819286/GL-N01.lan/thrive/minion_setup/2-4
     # salt/state_result/20230425143741819286/GL-N01.lan/thrive/minion_setup/3-4
     # salt/state_result/20230425143741819286/GL-N01.lan/thrive/minion_setup/4-4 || Means this is done
+    conn, mdb = _get_conn()
 
     if isinstance(events, list):
-        log.critical("In single item of events")
-        events = events[0]
+        event = events[0]
+        tag, data = event["tag"], event["data"]
+        if "state_result" in tag:
+            if "/thrive/minion_setup" in tag:
+                ts = datetime.datetime.utcnow()
+                split = tag.split("/")
+                jid = split[2]
+                minion = split[3]
+                progressSteps = split.pop()
+                splitProgressSteps = progressSteps.split("-")
+                totalSteps = splitProgressSteps.pop()
+                currentStep = splitProgressSteps[0]
+                progress = int(currentStep) / int(totalSteps) * 100
+                mdb.jobs.update_one({"jid": jid}, {
+                    "$set": {
+                        "jid": jid,
+                        "minion": minion,
+                        "updated": ts,
+                        "progress": progress
+                    },
+                    "$push": {
+                        "jobs": data
+                    }
+                }, upsert=True)
 
     if isinstance(events, dict):
-        log.critical("In array of events")
-        events = events
+        for event in events:
+            tag, data = event["tag"], event["data"]
+            if "state_result" in tag:
+                if "/thrive/minion_setup" in tag:
+                    split = tag.split("/")
+                    jid = split[2]
+                    minion = split[3]
+                    progressSteps = split.pop()
+                    splitProgressSteps = progressSteps.split("-")
+                    totalSteps = splitProgressSteps.pop()
+                    currentStep = splitProgressSteps[0]
+                    progress = int(currentStep) / int(totalSteps) * 100
+                    mdb.jobs.update_one({"jid": jid}, {
+                        "$set": {
+                            "jid": jid,
+                            "minion": minion,
+                            "updated": ts,
+                            "progress": progress
+                        },
+                        "$push": {
+                            "jobs": data
+                        }
+                    }, upsert=True)
