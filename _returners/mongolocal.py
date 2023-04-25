@@ -187,7 +187,7 @@ def returner(load):
         "minion": load["id"],
         "jid": load["jid"],
         "return": back,
-        "timestamp": ts,
+        "updated": ts,
         "fun": load["fun"],
         "full_ret": full_ret,
     }
@@ -196,7 +196,7 @@ def returner(load):
 
     outdata = {"$set": sdata}
     mdb.jobs.update_one({"jid": load["jid"]}, {
-                        "$set": outdata}, upsert=True, multi=True)
+                        "$set": outdata}, upsert=True)
     # mdb.jobs.insert_one(sdata.copy())
     ### MONGODB Specific ###
 
