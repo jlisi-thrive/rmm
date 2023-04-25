@@ -657,7 +657,7 @@ def event_return(events):
                 mdb.jobs.update_one({"jid": jid}, {
                     "$set": {
                         "jid": jid,
-                        "minionId": minReference,
+                        "minionId": minReference["_id"],
                         "updated": ts,
                         "progress": progress
                     },
