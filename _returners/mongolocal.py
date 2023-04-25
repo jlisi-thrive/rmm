@@ -3,6 +3,7 @@ import errno
 import glob
 import logging
 import os
+import datetime
 import shutil
 import time
 import socket
@@ -181,7 +182,7 @@ def returner(load):
     else:
         full_ret = load
 
-    ts = time.time()
+    ts = datetime.datetime.utcnow()
     sdata = {
         "minion": load["id"],
         "jid": load["jid"],
