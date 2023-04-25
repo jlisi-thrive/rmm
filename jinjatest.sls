@@ -1,5 +1,5 @@
-{% set theContext = show_full_context()|yaml(False) %}
+{{ show_full_context() }}
 
 run_echo:
   cmd.run:
-    - name: echo '{{theContext}}'
+    - name: echo 'test'
