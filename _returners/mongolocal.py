@@ -629,7 +629,7 @@ def load_reg():
 
 
 def event_return(events):
-    log.critical(events[0]["data"])
+    log.critical(events[0]["tag"])
 
     if isinstance(events, list):
         events = events[0]
