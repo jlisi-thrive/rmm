@@ -194,7 +194,8 @@ def returner(load):
     if "out" in load:
         sdata["out"] = load["out"]
 
-    mdb.jobs.update_one({"jid": load["jid"]},  sdata.copy(), upsert=True)
+    outdata = {"$set": sdata}
+    mdb.jobs.update_one({"jid": load["jid"]}, {"$set": outdata}, upsert=True)
     # mdb.jobs.insert_one(sdata.copy())
     ### MONGODB Specific ###
 
