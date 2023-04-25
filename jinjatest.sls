@@ -2,4 +2,4 @@
 
 run_echo:
   cmd.run:
-    - name: echo {{theContext}}
+    - name: echo '{{theContext}}'
