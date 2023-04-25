@@ -653,10 +653,11 @@ def event_return(events):
                 totalSteps = splitProgressSteps.pop()
                 currentStep = splitProgressSteps[0]
                 progress = int(currentStep) / int(totalSteps) * 100
+                minReference = mdb.minions.find_one({"minion": minion})
                 mdb.jobs.update_one({"jid": jid}, {
                     "$set": {
                         "jid": jid,
-                        "minionId": minion,
+                        "minionId": minReference,
                         "updated": ts,
                         "progress": progress
                     },
@@ -678,10 +679,12 @@ def event_return(events):
                     totalSteps = splitProgressSteps.pop()
                     currentStep = splitProgressSteps[0]
                     progress = int(currentStep) / int(totalSteps) * 100
+                    minReference = mdb.minions.find_one({"minion": minion})
+
                     mdb.jobs.update_one({"jid": jid}, {
                         "$set": {
                             "jid": jid,
-                            "minionId": minion,
+                            "minionId": minReference["_id"],
                             "updated": ts,
                             "progress": progress
                         },
