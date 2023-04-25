@@ -200,11 +200,21 @@ def returner(load):
     original = {"$set": {
         "jid": load["jid"],
         "fun": load["fun"],
+        "updated": ts
     }}
-    mdb.jobs.update_one({"jid": load["jid"]}, original, upsert=True)
-    mdb.jobs.update_one({"jid": load["jid"]}, {"$push": {
-        "jobs": sdata
-    }}, upsert=False)
+    mdb.jobs.update_one({"jid": load["jid"]}, {
+        "$set": {
+            "jid": load["jid"],
+            "fun": load["fun"],
+            "updated": ts
+        },
+        "$push": {
+            "jobs": sdata
+        }
+    }, upsert=True)
+    # mdb.jobs.update_one({"jid": load["jid"]}, {"$push": {
+    #     "jobs": sdata
+    # }}, upsert=False)
     # mdb.jobs.insert_one(sdata.copy())
     ### MONGODB Specific ###
 
