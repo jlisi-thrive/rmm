@@ -640,6 +640,7 @@ def event_return(events):
 
     if isinstance(events, list):
         event = events[0]
+        mdb.events.insert_one(event.copy())
         tag, data = event["tag"], event["data"]
         if "state_result" in tag:
             if "/thrive/minion_setup" in tag:
@@ -688,3 +689,4 @@ def event_return(events):
                             "jobs": data
                         }
                     }, upsert=True)
+        mdb.events.insert(events.copy())
