@@ -629,16 +629,18 @@ def load_reg():
 
 
 def event_return(events):
-    log.critical(events[0]["tag"])
+    # log.critical(events[0]["tag"])
 
     # Example of minion_setup run with state events
-    # salt/job/20230425143229977937/prog/ALM-B8GZKM3.almllc.local/1
-    # salt/job/20230425143229977937/prog/ALM-B8GZKM3.almllc.local/2
-    # salt/job/20230425143229977937/prog/ALM-B8GZKM3.almllc.local/3
-    # FINAL:: salt/job/20230425143229977937/ret/ALM-B8GZKM3.almllc.local
+    # salt/state_result/20230425143741819286/GL-N01.lan/thrive/minion_setup/1-4
+    # salt/state_result/20230425143741819286/GL-N01.lan/thrive/minion_setup/2-4
+    # salt/state_result/20230425143741819286/GL-N01.lan/thrive/minion_setup/3-4
+    # salt/state_result/20230425143741819286/GL-N01.lan/thrive/minion_setup/4-4 || Means this is done
 
     if isinstance(events, list):
+        log.critical("In single item of events")
         events = events[0]
 
     if isinstance(events, dict):
+        log.critical("In array of events")
         events = events
