@@ -199,7 +199,7 @@ def returner(load):
     }}
     original = {"$set": {
         "jid": load["jid"],
-        "updated": ts
+        "fun": load["fun"],
     }}
     mdb.jobs.update_one({"jid": load["jid"]}, original, upsert=True)
     mdb.jobs.update_one({"jid": load["jid"]}, {"$push": {
