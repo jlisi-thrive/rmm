@@ -646,10 +646,12 @@ def event_return(events):
         tag, data = event["tag"], event["data"]
 
         # TODO:: Parse data so it just pulls back data["ret"]
-        jobRetData = data["ret"]
+        jobDataObject = data["data"] if data.has_key("data") else None
+        jobDataRet = jobDataObject["ret"] if jobDataObject.has_key("ret") else {
+        }
         jobData = {
             "tag": tag,
-            **jobRetData
+            **jobDataRet
         }
         if "state_result" in tag:
             if "/thrive/minion_setup" in tag:
@@ -678,10 +680,12 @@ def event_return(events):
     if isinstance(events, dict):
         for event in events:
             tag, data = event["tag"], event["data"]
-            jobRetData = data["ret"]
+            jobDataObject = data["data"] if data.has_key("data") else None
+            jobDataRet = jobDataObject["ret"] if jobDataObject.has_key("ret") else {
+            }
             jobData = {
                 "tag": tag,
-                **jobRetData
+                **jobDataRet
             }
             if "state_result" in tag:
                 if "/thrive/minion_setup" in tag:
