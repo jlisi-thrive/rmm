@@ -647,7 +647,7 @@ def event_return(events):
         if "state_result" in tag:
             if "/thrive/minion_setup" in tag:
                 data = event["data"]
-                jobDataReturn = data["ret"]
+                jobDataReturn = data["data"]["ret"]
                 jobData = {
                     "tag": tag,
                     **jobDataReturn
@@ -680,7 +680,7 @@ def event_return(events):
             if "state_result" in tag:
                 if "/thrive/minion_setup" in tag:
                     data = event["data"]
-                    jobDataReturn = data["ret"]
+                    jobDataReturn = data["data"]["ret"]
                     jobData = {
                         "tag": tag,
                         **jobDataReturn
