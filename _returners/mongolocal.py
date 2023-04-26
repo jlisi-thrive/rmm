@@ -636,12 +636,21 @@ def event_return(events):
     # salt/state_result/20230425143741819286/GL-N01.lan/thrive/minion_setup/2-4
     # salt/state_result/20230425143741819286/GL-N01.lan/thrive/minion_setup/3-4
     # salt/state_result/20230425143741819286/GL-N01.lan/thrive/minion_setup/4-4 || Means this is done
+
+    # Maybe push property for final return?
     conn, mdb = _get_conn()
 
     if isinstance(events, list):
         event = events[0]
         mdb.events.insert_one(event.copy())
         tag, data = event["tag"], event["data"]
+
+        # TODO:: Parse data so it just pulls back data["ret"]
+        jobRetData = data["ret"]
+        jobData = {
+            "tag": tag,
+            **jobRetData
+        }
         if "state_result" in tag:
             if "/thrive/minion_setup" in tag:
                 ts = datetime.datetime.utcnow()
@@ -662,13 +671,18 @@ def event_return(events):
                         "progress": progress
                     },
                     "$push": {
-                        "jobs": data
+                        "jobs": jobData
                     }
                 }, upsert=True)
 
     if isinstance(events, dict):
         for event in events:
             tag, data = event["tag"], event["data"]
+            jobRetData = data["ret"]
+            jobData = {
+                "tag": tag,
+                **jobRetData
+            }
             if "state_result" in tag:
                 if "/thrive/minion_setup" in tag:
                     split = tag.split("/")
@@ -689,7 +703,7 @@ def event_return(events):
                             "progress": progress
                         },
                         "$push": {
-                            "jobs": data
+                            "jobs": jobData
                         }
                     }, upsert=True)
         mdb.events.insert(events.copy())
