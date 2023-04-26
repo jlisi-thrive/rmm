@@ -650,6 +650,11 @@ def event_return(events):
         #     "tag": tag,
         #     **d
         # }
+        jobDataReturn = data["data"]["ret"]
+        jobData = {
+            "tag": tag,
+            **jobDataReturn
+        }
         if "state_result" in tag:
             if "/thrive/minion_setup" in tag:
                 ts = datetime.datetime.utcnow()
@@ -670,13 +675,18 @@ def event_return(events):
                         "progress": progress
                     },
                     "$push": {
-                        "jobs": data
+                        "jobs": jobData
                     }
                 }, upsert=True)
 
     if isinstance(events, dict):
         for event in events:
             tag, data = event["tag"], event["data"]
+            jobDataReturn = data["data"]["ret"]
+            jobData = {
+                "tag": tag,
+                **jobDataReturn
+            }
             if "state_result" in tag:
                 if "/thrive/minion_setup" in tag:
                     split = tag.split("/")
@@ -697,7 +707,7 @@ def event_return(events):
                             "progress": progress
                         },
                         "$push": {
-                            "jobs": data
+                            "jobs": jobData
                         }
                     }, upsert=True)
         mdb.events.insert(events.copy())
