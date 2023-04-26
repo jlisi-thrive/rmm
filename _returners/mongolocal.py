@@ -644,19 +644,14 @@ def event_return(events):
         event = events[0]
         mdb.events.insert_one(event.copy())
         tag = event["tag"]
-        data = event["data"] if "data" in event else {}
-        # TODO:: Parse data so it just pulls back data["ret"]
-        # jobData = {
-        #     "tag": tag,
-        #     **d
-        # }
-        jobDataReturn = data["data"]["ret"]
-        jobData = {
-            "tag": tag,
-            **jobDataReturn
-        }
         if "state_result" in tag:
             if "/thrive/minion_setup" in tag:
+                data = event["data"]
+                jobDataReturn = data["ret"]
+                jobData = {
+                    "tag": tag,
+                    **jobDataReturn
+                }
                 ts = datetime.datetime.utcnow()
                 split = tag.split("/")
                 jid = split[2]
@@ -682,15 +677,14 @@ def event_return(events):
     if isinstance(events, dict):
         for event in events:
             tag = event["tag"]
-            data = event["data"] if "data" in event else {}
-
-            jobDataReturn = data["ret"]
-            jobData = {
-                "tag": tag,
-                **jobDataReturn
-            }
             if "state_result" in tag:
                 if "/thrive/minion_setup" in tag:
+                    data = event["data"]
+                    jobDataReturn = data["ret"]
+                    jobData = {
+                        "tag": tag,
+                        **jobDataReturn
+                    }
                     split = tag.split("/")
                     jid = split[2]
                     minion = split[3]
