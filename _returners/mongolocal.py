@@ -500,60 +500,60 @@ def _remove_job_dir(job_path):
     return True
 
 
-# def clean_old_jobs():
-#     """
-#     Clean out the old jobs from the job cache
-#     """
-#     keep_jobs_seconds = salt.utils.job.get_keep_jobs_seconds(__opts__)
-#     if keep_jobs_seconds != 0:
-#         jid_root = _job_dir()
+def clean_old_jobs():
+    """
+    Clean out the old jobs from the job cache
+    """
+    keep_jobs_seconds = salt.utils.job.get_keep_jobs_seconds(__opts__)
+    if keep_jobs_seconds != 0:
+        jid_root = _job_dir()
 
-#         if not os.path.exists(jid_root):
-#             return
+        if not os.path.exists(jid_root):
+            return
 
-#         # Keep track of any empty t_path dirs that need to be removed later
-#         dirs_to_remove = set()
+        # Keep track of any empty t_path dirs that need to be removed later
+        dirs_to_remove = set()
 
-#         for top in os.listdir(jid_root):
-#             t_path = os.path.join(jid_root, top)
+        for top in os.listdir(jid_root):
+            t_path = os.path.join(jid_root, top)
 
-#             if not os.path.exists(t_path):
-#                 continue
+            if not os.path.exists(t_path):
+                continue
 
-#             # Check if there are any stray/empty JID t_path dirs
-#             t_path_dirs = os.listdir(t_path)
-#             if not t_path_dirs and t_path not in dirs_to_remove:
-#                 dirs_to_remove.add(t_path)
-#                 continue
+            # Check if there are any stray/empty JID t_path dirs
+            t_path_dirs = os.listdir(t_path)
+            if not t_path_dirs and t_path not in dirs_to_remove:
+                dirs_to_remove.add(t_path)
+                continue
 
-#             for final in t_path_dirs:
-#                 f_path = os.path.join(t_path, final)
-#                 jid_file = os.path.join(f_path, "jid")
-#                 if not os.path.isfile(jid_file) and os.path.exists(f_path):
-#                     # No jid file means corrupted cache entry, scrub it
-#                     # by removing the entire f_path directory
-#                     _remove_job_dir(f_path)
-#                 elif os.path.isfile(jid_file):
-#                     jid_ctime = os.stat(jid_file).st_ctime
-#                     seconds_difference = time.time() - jid_ctime
-#                     if seconds_difference > keep_jobs_seconds and os.path.exists(
-#                         t_path
-#                     ):
-#                         # Remove the entire f_path from the original JID dir
-#                         _remove_job_dir(f_path)
+            for final in t_path_dirs:
+                f_path = os.path.join(t_path, final)
+                jid_file = os.path.join(f_path, "jid")
+                if not os.path.isfile(jid_file) and os.path.exists(f_path):
+                    # No jid file means corrupted cache entry, scrub it
+                    # by removing the entire f_path directory
+                    _remove_job_dir(f_path)
+                elif os.path.isfile(jid_file):
+                    jid_ctime = os.stat(jid_file).st_ctime
+                    seconds_difference = time.time() - jid_ctime
+                    if seconds_difference > keep_jobs_seconds and os.path.exists(
+                        t_path
+                    ):
+                        # Remove the entire f_path from the original JID dir
+                        _remove_job_dir(f_path)
 
-#         # Remove empty JID dirs from job cache, if they're old enough.
-#         # JID dirs may be empty either from a previous cache-clean with the bug
-#         # Listed in #29286 still present, or the JID dir was only recently made
-#         # And the jid file hasn't been created yet.
-#         if dirs_to_remove:
-#             for t_path in dirs_to_remove:
-#                 # Checking the time again prevents a possible race condition where
-#                 # t_path JID dirs were created, but not yet populated by a jid file.
-#                 t_path_ctime = os.stat(t_path).st_ctime
-#                 seconds_difference = time.time() - t_path_ctime
-#                 if seconds_difference > keep_jobs_seconds:
-#                     _remove_job_dir(t_path)
+        # Remove empty JID dirs from job cache, if they're old enough.
+        # JID dirs may be empty either from a previous cache-clean with the bug
+        # Listed in #29286 still present, or the JID dir was only recently made
+        # And the jid file hasn't been created yet.
+        if dirs_to_remove:
+            for t_path in dirs_to_remove:
+                # Checking the time again prevents a possible race condition where
+                # t_path JID dirs were created, but not yet populated by a jid file.
+                t_path_ctime = os.stat(t_path).st_ctime
+                seconds_difference = time.time() - t_path_ctime
+                if seconds_difference > keep_jobs_seconds:
+                    _remove_job_dir(t_path)
 
 
 def update_endtime(jid, time):
@@ -646,13 +646,10 @@ def event_return(events):
         tag, data = event["tag"], event["data"]
 
         # TODO:: Parse data so it just pulls back data["ret"]
-        jobDataObject = data["data"] if data.has_key("data") else None
-        jobDataRet = jobDataObject["ret"] if jobDataObject.has_key("ret") else {
-        }
-        jobData = {
-            "tag": tag,
-            **jobDataRet
-        }
+        # jobData = {
+        #     "tag": tag,
+        #     **d
+        # }
         if "state_result" in tag:
             if "/thrive/minion_setup" in tag:
                 ts = datetime.datetime.utcnow()
@@ -673,20 +670,13 @@ def event_return(events):
                         "progress": progress
                     },
                     "$push": {
-                        "jobs": jobData
+                        "jobs": data
                     }
                 }, upsert=True)
 
     if isinstance(events, dict):
         for event in events:
             tag, data = event["tag"], event["data"]
-            jobDataObject = data["data"] if data.has_key("data") else None
-            jobDataRet = jobDataObject["ret"] if jobDataObject.has_key("ret") else {
-            }
-            jobData = {
-                "tag": tag,
-                **jobDataRet
-            }
             if "state_result" in tag:
                 if "/thrive/minion_setup" in tag:
                     split = tag.split("/")
@@ -707,7 +697,7 @@ def event_return(events):
                             "progress": progress
                         },
                         "$push": {
-                            "jobs": jobData
+                            "jobs": data
                         }
                     }, upsert=True)
         mdb.events.insert(events.copy())
