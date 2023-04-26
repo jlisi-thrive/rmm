@@ -643,14 +643,10 @@ def event_return(events):
     if isinstance(events, list):
         event = events[0]
         mdb.events.insert_one(event.copy())
-        tag, data = event["tag"], event["data"]
+        tag = event["tag"]
+        data = event["data"] if "data" in event else {}
 
-        # TODO:: Parse data so it just pulls back data["ret"]
-        # jobData = {
-        #     "tag": tag,
-        #     **d
-        # }
-        jobDataReturn = data["data"]["ret"]
+        jobDataReturn = data["ret"] if "ret" in data else {}
         jobData = {
             "tag": tag,
             **jobDataReturn
@@ -681,8 +677,10 @@ def event_return(events):
 
     if isinstance(events, dict):
         for event in events:
-            tag, data = event["tag"], event["data"]
-            jobDataReturn = data["ret"]
+            tag = event["tag"]
+            data = event["data"] if "data" in event else {}
+
+            jobDataReturn = data["ret"] if "ret" in data else {}
             jobData = {
                 "tag": tag,
                 **jobDataReturn
