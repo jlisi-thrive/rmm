@@ -682,7 +682,7 @@ def event_return(events):
     if isinstance(events, dict):
         for event in events:
             tag, data = event["tag"], event["data"]
-            jobDataReturn = data["data"]["ret"]
+            jobDataReturn = data["ret"]
             jobData = {
                 "tag": tag,
                 **jobDataReturn
