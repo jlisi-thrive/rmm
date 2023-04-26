@@ -645,8 +645,12 @@ def event_return(events):
         mdb.events.insert_one(event.copy())
         tag = event["tag"]
         data = event["data"] if "data" in event else {}
-
-        jobDataReturn = data["ret"] if "ret" in data else {}
+        # TODO:: Parse data so it just pulls back data["ret"]
+        # jobData = {
+        #     "tag": tag,
+        #     **d
+        # }
+        jobDataReturn = data["data"]["ret"]
         jobData = {
             "tag": tag,
             **jobDataReturn
@@ -680,7 +684,7 @@ def event_return(events):
             tag = event["tag"]
             data = event["data"] if "data" in event else {}
 
-            jobDataReturn = data["ret"] if "ret" in data else {}
+            jobDataReturn = data["ret"]
             jobData = {
                 "tag": tag,
                 **jobDataReturn
