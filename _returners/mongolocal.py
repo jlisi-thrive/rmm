@@ -642,7 +642,7 @@ def event_return(events):
 
     if isinstance(events, list):
         event = events[0]
-        mdb.events.insert_one(event.copy())
+        # mdb.events.insert_one(event.copy())
         tag = event["tag"]
         if "state_result" in tag:
             if "/thrive/minion_setup" in tag:
@@ -674,7 +674,7 @@ def event_return(events):
                         "jobs": jobData
                     }
                 }, upsert=True)
-
+    # TODO:: Set so it makes sure no duplicate job data finds its way into event. Minion Setup should really only have 4. Its getting 16.
     if isinstance(events, dict):
         for event in events:
             tag = event["tag"]
@@ -708,4 +708,4 @@ def event_return(events):
                             "jobs": jobData
                         }
                     }, upsert=True)
-        mdb.events.insert(events.copy())
+        # mdb.events.insert(events.copy())

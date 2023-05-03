@@ -110,8 +110,9 @@ def returner(ret):
     #   'fun': <function>, 'full_ret': <unformatted return with dots removed>}
     #
     # again we run into the issue with deprecated code from previous versions
-
-    mdb.saltReturns.insert_one(sdata.copy())
+    mdb.saltReturns.update_one(
+        {"jid": sdata["jid"]}, sdata.copy(), upsert=True)
+    # mdb.saltReturns.insert_one(sdata.copy())
 
 
 def _safe_copy(dat):
@@ -161,8 +162,20 @@ def save_load(jid, load, minions=None):
     """
     conn, mdb = _get_conn(ret=None)
     to_save = _safe_copy(load)
-
-    mdb.jobs.insert_one(to_save)
+    # mdb.jobs.update_one({"jid": jid}, {
+    #     "$set": {
+    #         "jid": jid,
+    #         "minion": minion,
+    #         "minionId": minReference["_id"],
+    #         "updated": ts,
+    #         "progress": progress
+    #     },
+    #     "$push": {
+    #         "jobs": jobData
+    #     }
+    # }, upsert=True)
+    # mdb.jobs.insert_one(to_save)
+    mdb.jobs.update_one({"jid": jid}, {"$set": to_save}, upsert=True)
 
 
 def save_minions(jid, minions, syndic_id=None):  # pylint: disable=unused-argument
