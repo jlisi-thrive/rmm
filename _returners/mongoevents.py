@@ -111,7 +111,7 @@ def returner(ret):
     #
     # again we run into the issue with deprecated code from previous versions
     mdb.saltReturns.update_one(
-        {"jid": sdata["jid"]}, sdata.copy(), upsert=True)
+        {"jid": sdata["jid"]}, {"$set": sdata.copy()}, upsert=True)
     # mdb.saltReturns.insert_one(sdata.copy())
 
 
