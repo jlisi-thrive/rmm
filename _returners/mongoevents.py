@@ -284,7 +284,8 @@ def send_event(event):
     FQDN_MASTER = SOCKET_MASTER + "-rmm.thrive.management"
     tag, data = event["tag"], event["data"]
     # jid = data["jid"] if data.__contains__('a') else uuid.uuid4()
-    HUB_NAME = return_hub(tag)
+    # HUB_NAME = return_hub(tag)
+    HUB_NAME = "rmm-events"
     producer = EventHubProducerClient.from_connection_string(
         conn_str=EVENT_HUB_CONNECTION_STR, eventhub_name=HUB_NAME)
 
