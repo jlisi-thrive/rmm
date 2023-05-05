@@ -157,9 +157,9 @@ def fetch(bank, key, cachedir):
         # payload = json.dumps({"bank": bank, "key": key, "data": saltReturn, "action": "fetch"})
         # requests.request("POST", url, data=payload, headers={'Content-Type': 'application/json'})
         utcTime = datetime.now()
+        log.error(saltReturn)
         accountSysId = saltReturn["grains"]["account_sys_id"]
         accountName = mdb.accounts.find_one({'account_sys_id': accountSysId})
-        log.error(saltReturn)
         newvalues = {"$set": {**saltReturn,
                               "account": accountName["name"], "updated": utcTime}}
         mdb.minions.update_one({'minion': minion}, newvalues, upsert=True)
