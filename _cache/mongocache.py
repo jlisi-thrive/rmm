@@ -10,6 +10,7 @@ import tempfile
 import socket
 import copy
 import time
+from datetime import datetime
 
 import salt.returners
 import salt.payload
@@ -70,6 +71,8 @@ def init_kwargs(kwargs):
 def get_storage_id(kwargs):
     return ("localfs", __cachedir(kwargs))
 
+# TODO:: Add timestamps
+
 
 def store(bank, key, data, cachedir):
     """
@@ -83,7 +86,8 @@ def store(bank, key, data, cachedir):
                "bank": bank, "key": key, "data": data, "action": "store"}
     dataWithHost = data
     dataWithHost["host"] = socket.gethostname()
-    newvalues = {"$set": dataWithHost}
+    utcTime = datetime.now()
+    newvalues = {"$set": {**dataWithHost, "updated": utcTime}}
     mdb.minions.update_one({'minion': minion}, newvalues, upsert=True)
     # if key == 'mine':
     #     newvalues = { "$set": { 'mine': data } }
@@ -148,7 +152,8 @@ def fetch(bank, key, cachedir):
                 saltReturn = salt.payload.load(fh_)
         # payload = json.dumps({"bank": bank, "key": key, "data": saltReturn, "action": "fetch"})
         # requests.request("POST", url, data=payload, headers={'Content-Type': 'application/json'})
-        newvalues = {"$set": saltReturn}
+        utcTime = datetime.now()
+        newvalues = {"$set": {**saltReturn, "updated": utcTime}}
         mdb.minions.update_one({'minion': minion}, newvalues, upsert=True)
         return saltReturn
     except OSError as exc:
