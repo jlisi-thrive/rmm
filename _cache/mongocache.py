@@ -159,6 +159,7 @@ def fetch(bank, key, cachedir):
         utcTime = datetime.now()
         accountSysId = saltReturn["grains"]["account_sys_id"]
         accountName = mdb.accounts.find_one({'account_sys_id': accountSysId})
+        log.critical(saltReturn)
         newvalues = {"$set": {**saltReturn,
                               "account": accountName["name"], "updated": utcTime}}
         mdb.minions.update_one({'minion': minion}, newvalues, upsert=True)
