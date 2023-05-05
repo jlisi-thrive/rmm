@@ -85,9 +85,13 @@ def store(bank, key, data, cachedir):
     payload = {"host": socket.gethostname(), "minion": minion,
                "bank": bank, "key": key, "data": data, "action": "store"}
     dataWithHost = data
+    accountSysId = data["grains"]["account_sys_id"]
+    accountName = mdb.accounts.find_one({'account_sys_id': accountSysId})
+
     dataWithHost["host"] = socket.gethostname()
     utcTime = datetime.now()
-    newvalues = {"$set": {**dataWithHost, "updated": utcTime}}
+    newvalues = {"$set": {**dataWithHost,
+                          "account": accountName, "updated": utcTime}}
     mdb.minions.update_one({'minion': minion}, newvalues, upsert=True)
     # if key == 'mine':
     #     newvalues = { "$set": { 'mine': data } }
@@ -153,7 +157,10 @@ def fetch(bank, key, cachedir):
         # payload = json.dumps({"bank": bank, "key": key, "data": saltReturn, "action": "fetch"})
         # requests.request("POST", url, data=payload, headers={'Content-Type': 'application/json'})
         utcTime = datetime.now()
-        newvalues = {"$set": {**saltReturn, "updated": utcTime}}
+        accountSysId = saltReturn["grains"]["account_sys_id"]
+        accountName = mdb.accounts.find_one({'account_sys_id': accountSysId})
+        newvalues = {"$set": {**saltReturn,
+                              "account": accountName, "updated": utcTime}}
         mdb.minions.update_one({'minion': minion}, newvalues, upsert=True)
         return saltReturn
     except OSError as exc:
