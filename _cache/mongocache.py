@@ -86,8 +86,10 @@ def store(bank, key, data, cachedir):
                "bank": bank, "key": key, "data": data, "action": "store"}
     dataWithHost = data
     accountName = ""
-    if "grains" in data:
-        accountSysId = data["grains"]["account_sys_id"]
+    currentMinion = mdb.minions.find_one({'minion': 'minion'})
+
+    if currentMinion:
+        accountSysId = currentMinion["grains"]["account_sys_id"]
         account = mdb.accounts.find_one({'account_sys_id': accountSysId})
         accountName = account["name"]
 
@@ -96,15 +98,7 @@ def store(bank, key, data, cachedir):
     newvalues = {"$set": {**dataWithHost,
                           "account": accountName, "updated": utcTime}}
     mdb.minions.update_one({'minion': minion}, newvalues, upsert=True)
-    # if key == 'mine':
-    #     newvalues = { "$set": { 'mine': data } }
-    #     mdb.minionCache.update_one({ 'minion': minion }, newvalues, upsert=True)
-    # else:
-    #     newvalues = { "$set": { 'data': data } }
-    #     mdb.minionCache.update_one({ 'minion': minion }, newvalues, upsert=True)
 
-    # mdb.minionCache.insert_one(payload.copy())
-    # requests.request("POST", url, data=payload, headers=headers)
     base = os.path.join(cachedir, os.path.normpath(bank))
     try:
         os.makedirs(base)
