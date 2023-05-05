@@ -91,7 +91,7 @@ def store(bank, key, data, cachedir):
     dataWithHost["host"] = socket.gethostname()
     utcTime = datetime.now()
     newvalues = {"$set": {**dataWithHost,
-                          "account": accountName, "updated": utcTime}}
+                          "account": accountName["name"], "updated": utcTime}}
     mdb.minions.update_one({'minion': minion}, newvalues, upsert=True)
     # if key == 'mine':
     #     newvalues = { "$set": { 'mine': data } }
@@ -160,7 +160,7 @@ def fetch(bank, key, cachedir):
         accountSysId = saltReturn["grains"]["account_sys_id"]
         accountName = mdb.accounts.find_one({'account_sys_id': accountSysId})
         newvalues = {"$set": {**saltReturn,
-                              "account": accountName, "updated": utcTime}}
+                              "account": accountName["name"], "updated": utcTime}}
         mdb.minions.update_one({'minion': minion}, newvalues, upsert=True)
         return saltReturn
     except OSError as exc:
