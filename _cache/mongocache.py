@@ -85,13 +85,16 @@ def store(bank, key, data, cachedir):
     payload = {"host": socket.gethostname(), "minion": minion,
                "bank": bank, "key": key, "data": data, "action": "store"}
     dataWithHost = data
-    accountSysId = data["grains"]["account_sys_id"]
-    accountName = mdb.accounts.find_one({'account_sys_id': accountSysId})
+    accountName = ""
+    if "grains" in data:
+        accountSysId = data["grains"]["account_sys_id"]
+        account = mdb.accounts.find_one({'account_sys_id': accountSysId})
+        accountName = account["name"]
 
     dataWithHost["host"] = socket.gethostname()
     utcTime = datetime.now()
     newvalues = {"$set": {**dataWithHost,
-                          "account": accountName["name"], "updated": utcTime}}
+                          "account": accountName, "updated": utcTime}}
     mdb.minions.update_one({'minion': minion}, newvalues, upsert=True)
     # if key == 'mine':
     #     newvalues = { "$set": { 'mine': data } }
