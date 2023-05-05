@@ -86,7 +86,7 @@ def store(bank, key, data, cachedir):
                "bank": bank, "key": key, "data": data, "action": "store"}
     dataWithHost = data
     accountName = ""
-    currentMinion = mdb.minions.find_one({'minion': 'minion'})
+    currentMinion = mdb.minions.find_one({'minion': minion})
 
     if currentMinion:
         accountSysId = currentMinion["grains"]["account_sys_id"]
