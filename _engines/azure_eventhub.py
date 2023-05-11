@@ -23,6 +23,8 @@ def on_event(partition_context, event: EventData):
     # Put your code here.
     # If the operation is i/o intensive, multi-thread will have better performance.
     eventBody = event.body_as_json()
+    tgt = eventBody["tgt"]
+    fun = eventBody["fun"]
     # tgt = eventBody.get("tgt")
     # fun = eventBody.get("fun")
     # log.critical(json.dumps(eventBody))
@@ -33,6 +35,8 @@ def on_event(partition_context, event: EventData):
     log.critical("Received event from partition: {}.".format(
         partition_context.partition_id))
     log.critical(event)
+    log.critical(tgt)
+    log.critical(fun)
     # log.critical(fun)
     partition_context.update_checkpoint(event)
 
