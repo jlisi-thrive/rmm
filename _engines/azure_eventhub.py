@@ -2,7 +2,7 @@ import logging
 import json
 import salt.utils.event
 import salt.utils.json
-from azure.eventhub import EventHubConsumerClient, EventData
+from azure.eventhub import EventHubConsumerClient
 from azure.eventhub.extensions.checkpointstoreblob import BlobCheckpointStore
 
 RECEIVE_DURATION = 15
@@ -19,7 +19,7 @@ log = logging.getLogger("azure_eventhub")
 __virtualname__ = "azure_eventhub"
 
 
-def on_event(partition_context, event: EventData):
+def on_event(partition_context, event):
     # Put your code here.
     # If the operation is i/o intensive, multi-thread will have better performance.
     eventBody = event.body_as_json()
