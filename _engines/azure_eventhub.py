@@ -32,8 +32,8 @@ def on_event(partition_context, event):
     # runner.cmd('fileserver.update', [])
     log.critical("Received event from partition: {}.".format(
         partition_context.partition_id))
-    log.critical(tgt)
-    log.critical(fun)
+    log.critical(event)
+    # log.critical(fun)
     partition_context.update_checkpoint(event)
 
 
