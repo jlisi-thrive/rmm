@@ -1,5 +1,6 @@
 import logging
 import json
+import salt.client
 import salt.utils.event
 import salt.utils.json
 from azure.eventhub import EventHubConsumerClient, EventData
@@ -25,6 +26,8 @@ def on_event(partition_context, event: EventData):
     eventBody = event.body_as_json()
     tgt = eventBody["tgt"]
     fun = eventBody["fun"]
+    local = salt.client.LocalClient()
+    local.cmd_async(tgt, fun, [])
     # tgt = eventBody.get("tgt")
     # fun = eventBody.get("fun")
     # log.critical(json.dumps(eventBody))
