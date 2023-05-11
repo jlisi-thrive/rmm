@@ -22,7 +22,9 @@ __virtualname__ = "azure_eventhub"
 def on_event(partition_context, event: EventData):
     # Put your code here.
     # If the operation is i/o intensive, multi-thread will have better performance.
-    # eventBody = event.body_as_json()
+    eventBody = event.body_as_json()
+    tgt = eventBody.get("tgt")
+    fun = eventBody.get("fun")
     # log.critical(json.dumps(eventBody))
     # Example of how this could call a particular function
     # opts = salt.config.master_config('/etc/salt/master')
@@ -30,6 +32,8 @@ def on_event(partition_context, event: EventData):
     # runner.cmd('fileserver.update', [])
     log.critical("Received event from partition: {}.".format(
         partition_context.partition_id))
+    log.critical(tgt)
+    log.critical(fun)
     partition_context.update_checkpoint(event)
 
 
@@ -68,8 +72,8 @@ def start():
         CHECKPOINT_CONNECTION_STR, CHECKPOINT_STORAGE_CONTAINER)
     consumer_client = EventHubConsumerClient.from_connection_string(
         conn_str=EVENT_HUB_CONNECTION_STR,
-        consumer_group='saltstack',
-        eventhub_name="rmm-events",
+        consumer_group='master_1',
+        eventhub_name="rmm-executions",
         checkpoint_store=checkpoint_store
     )
     log.critical('Consumer will keep receiving')
@@ -80,21 +84,5 @@ def start():
                 on_event=on_event,
                 starting_position="-1",
             )
-        # thread = threading.Thread(
-        #     target=consumer_client.receive,
-        #     kwargs={
-        #         "on_event": on_event,
-        #         "on_partition_initialize": on_partition_initialize,
-        #         "on_partition_close": on_partition_close,
-        #         "on_error": on_error,
-        #         # "-1" is from the beginning of the partition.
-        #         "starting_position": "-1",
-        #     }
-        # )
-        # thread.daemon = True
-        # thread.start()
-        # time.sleep(RECEIVE_DURATION)
-        # consumer_client.close()
-        # thread.join()
     except KeyboardInterrupt:
         log.critical('Stop receiving.')
