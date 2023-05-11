@@ -23,24 +23,19 @@ __virtualname__ = "azure_eventhub"
 def on_event(partition_context, event: EventData):
     # Put your code here.
     # If the operation is i/o intensive, multi-thread will have better performance.
+    MASTER_FQDN = __opts__.get("master_fqdn", "Not Set")
     eventBody = event.body_as_json()
     tgt = eventBody["tgt"]
     fun = eventBody["fun"]
-    local = salt.client.LocalClient()
-    local.cmd_async(tgt, fun, [])
-    # tgt = eventBody.get("tgt")
-    # fun = eventBody.get("fun")
-    # log.critical(json.dumps(eventBody))
-    # Example of how this could call a particular function
-    # opts = salt.config.master_config('/etc/salt/master')
-    # runner = salt.runner.RunnerClient(opts)
-    # runner.cmd('fileserver.update', [])
-    log.critical("Received event from partition: {}.".format(
-        partition_context.partition_id))
-    log.critical(event)
-    log.critical(tgt)
-    log.critical(fun)
-    # log.critical(fun)
+    master = eventBody["master"]
+    args = eventBody["args"]
+    if master == MASTER_FQDN:
+        log.critical(tgt)
+        log.critical(fun)
+        local = salt.client.LocalClient()
+        local.cmd_async(tgt, fun, args)
+    else:
+        log.critical("Not for this master")
     partition_context.update_checkpoint(event)
 
 
