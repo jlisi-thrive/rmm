@@ -24,18 +24,21 @@ def on_event(partition_context, event: EventData):
     # Put your code here.
     # If the operation is i/o intensive, multi-thread will have better performance.
     MASTER_FQDN = __opts__.get("master_fqdn", "Not Set")
-    eventBody = event.body_as_json()
-    tgt = eventBody["tgt"]
-    fun = eventBody["fun"]
-    master = eventBody["master"]
-    args = eventBody["args"]
-    if master == MASTER_FQDN:
-        log.critical(tgt)
-        log.critical(fun)
-        local = salt.client.LocalClient()
-        local.cmd_async(tgt, fun, args)
-    else:
-        log.critical("Not for this master")
+    try:
+        eventBody = event.body_as_json()
+        tgt = eventBody["tgt"]
+        fun = eventBody["fun"]
+        master = eventBody["master"]
+        args = eventBody["args"]
+        if master == MASTER_FQDN:
+            log.critical(tgt)
+            log.critical(fun)
+            local = salt.client.LocalClient()
+            local.cmd_async(tgt, fun, args)
+        else:
+            log.critical("Not for this master")
+    except:
+        log.critical("Could not parse")
     partition_context.update_checkpoint(event)
 
 
