@@ -33,7 +33,7 @@ def on_event(partition_context, event: EventData):
         log.critical(tgt)
         log.critical(fun)
         local = salt.client.LocalClient()
-        local.cmd_async(tgt, fun, args)
+        local.cmd(tgt, fun, args)
     else:
         log.critical("Not for this master")
     partition_context.update_checkpoint(event)
