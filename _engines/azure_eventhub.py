@@ -73,11 +73,12 @@ def start():
     CHECKPOINT_CONNECTION_STR = __opts__.get("storage.string", "Not Set")
     CHECKPOINT_STORAGE_CONTAINER = __opts__.get("storage.container", "Not Set")
     EVENT_HUB_CONNECTION_STR = __opts__.get("hub.string", "Not Set")
+    CONSUMER_GROUP = __opts__.get("consumer_group", "Not Set")
     checkpoint_store = BlobCheckpointStore.from_connection_string(
         CHECKPOINT_CONNECTION_STR, CHECKPOINT_STORAGE_CONTAINER)
     consumer_client = EventHubConsumerClient.from_connection_string(
         conn_str=EVENT_HUB_CONNECTION_STR,
-        consumer_group='master_1',
+        consumer_group=CONSUMER_GROUP,
         eventhub_name="rmm-executions",
         checkpoint_store=checkpoint_store
     )
