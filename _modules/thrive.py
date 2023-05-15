@@ -2,6 +2,12 @@ import json
 import requests
 import pingparsing
 from operator import itemgetter
+from datetime import datetime
+
+
+def health():
+    return datetime.now()
+
 
 def pings():
     destinations = ["8.8.8.8", "8.8.4.4", "thrive.service-now.com"]
@@ -22,5 +28,5 @@ def pings():
         }
         results.append(resObj)
 
-    #__salt__["grains.setval"]("pings", results)
+    # __salt__["grains.setval"]("pings", results)
     return results
