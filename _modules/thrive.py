@@ -1,15 +1,12 @@
 import json
 import requests
 import pingparsing
-import socket
 from operator import itemgetter
 from datetime import datetime
 
 
 def health():
-    SOCKET_MASTER = socket.gethostname()
-    FQDN_MASTER = SOCKET_MASTER + "-rmm.thrive.management"
-    return {"lastCheckIn": datetime.now(), "checkInMaster": FQDN_MASTER}
+    return {"lastCheckIn": datetime.now(), "checkInMaster": __grains__["master"]}
 
 
 def pings():
