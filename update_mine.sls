@@ -4,7 +4,7 @@ update_mine_functions:
     - source: salt://config/minion/mine.conf
     - force: True
 
-ThriveRMM:
-  service.running:
-    - enable: True
-    - reload: True
+restart_thrivermm:
+  module.run:
+    - service.restart
+      - name: ThriveRMM
