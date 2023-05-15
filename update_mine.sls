@@ -6,5 +6,5 @@ update_mine_functions:
 
 restart_thrivermm:
   module.run:
-    - service.restart
-      - name: ThriveRMM
+    - name: service.restart
+    - m_name: ThriveRMM
