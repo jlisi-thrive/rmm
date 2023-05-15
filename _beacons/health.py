@@ -56,7 +56,7 @@ def beacon(config):
 
     newvalues = {"$set": {"lastCheckIn": ctime, "checkedInHost": FQDN_MASTER}}
     minion = __grains__["id"]
-    mdb.minions.update_one({'minion': minion}, newvalues, upsert=True)
+    mdb.minions.update_one({'minion': minion}, newvalues, upsert=False)
     # whitelist = []
     # config = salt.utils.beacons.remove_hidden_options(config, whitelist)
 
