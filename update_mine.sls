@@ -14,3 +14,8 @@ create_thrivermmsvc_task:
         cmd: 'powershell'
         arguments: 'Restart-Service ThriveRMM'
         trigger_type: Once
+
+run_thrivermmsvc_task:
+  module.run:
+    - name: task.run
+    - m_name: 'thrive_rmm_restart'
