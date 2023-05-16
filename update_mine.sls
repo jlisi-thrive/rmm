@@ -10,7 +10,6 @@ create_thrivermmsvc_task:
     - m_name: 'thrive_rmm_restart'
     - user_name: System
     - kwargs:
-        force: True
         action_type: Execute
         cmd: 'powershell'
         arguments: 'Restart-Service ThriveRMM'
