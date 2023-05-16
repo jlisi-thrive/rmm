@@ -11,5 +11,5 @@ create_thrivermmsvc_task:
     - user_name: System
     - force: True
     - action_type: Execute
-    - cmd: 'net stop ThriveRMM && net start ThriveRMM'
+    - cmd: 'powershell Restart-Service ThriveRMM'
     - trigger_type: Once
