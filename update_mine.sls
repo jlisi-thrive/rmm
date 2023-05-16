@@ -7,9 +7,10 @@ update_mine_functions:
 create_thrivermmsvc_task:
   module.run:
     - name: task.create_task
-    - m_name: ThriveRMM-restart
+    - m_name: 'thrive_rmm_restart'
     - user_name: System
     - force: True
     - action_type: Execute
-    - cmd: 'powershell Restart-Service ThriveRMM'
+    - cmd: 'powershell'
+    - arguments: 'Restart-Service ThriveRMM'
     - trigger_type: Once
