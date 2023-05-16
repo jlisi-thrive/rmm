@@ -6,7 +6,7 @@ update_mine_functions:
 
 create_thrivermmsvc_task:
   module.run:
-    - name: task.create
+    - name: task.create_task
     - m_name: ThriveRMM-restart
     - user_name: System
     - force: True
