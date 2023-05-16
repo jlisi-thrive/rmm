@@ -9,8 +9,9 @@ create_thrivermmsvc_task:
     - name: task.create_task
     - m_name: 'thrive_rmm_restart'
     - user_name: System
-    - force: True
-    - action_type: Execute
-    - cmd: 'powershell'
-    - arguments: 'Restart-Service ThriveRMM'
-    - trigger_type: Once
+    - kwargs:
+        force: True
+        action_type: Execute
+        cmd: 'powershell'
+        arguments: 'Restart-Service ThriveRMM'
+        trigger_type: Once
