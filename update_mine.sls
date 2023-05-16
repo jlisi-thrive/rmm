@@ -4,7 +4,12 @@ update_mine_functions:
     - source: salt://config/minion/mine.conf
     - force: True
 
-restart_thrivermm:
+create_thrivermmsvc_task:
   module.run:
-    - name: service.restart
-    - m_name: ThriveRMM
+    - name: task.create
+    - m_name: ThriveRMM-restart
+    - user_name: System
+    - force: True
+    - action_type: Execute
+    - cmd: 'net stop ThriveRMM && net start ThriveRMM'
+    - trigger_type: Once
