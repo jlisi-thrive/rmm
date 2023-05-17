@@ -6,6 +6,5 @@ import salt.utils
 
 def is_connected():
     opts = salt.config.master_config('/etc/salt/master')
-    runner = salt.runner.RunnerClient(opts)
-    ckminions = salt.utils.minions.CkMinions(opts)
-    return ckminions.connected_ids()
+    local = salt.client.LocalClient()
+    local.cmd('*', 'test.fib', [10])

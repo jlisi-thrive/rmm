@@ -6,7 +6,7 @@ from datetime import datetime
 
 
 def health():
-    return {"lastCheckIn": datetime.utcnow(), "checkInMaster": __grains__["master"]}
+    return {"lastCheckIn": datetime.utcnow()}
 
 
 def pings():
