@@ -55,14 +55,15 @@ def start():
                 if event:
                     # Check if it is a job
                     target = ""
+                    eventData = event["data"]
                     tag = event["tag"] if "tag" in event else None
-                    if "id" in event:
-                        target = event["id"]
-                    elif "tgt" in event:
-                        target = event["tgt"]
+                    if "id" in eventData:
+                        target = eventData["id"]
+                    elif "tgt" in eventData:
+                        target = eventData["tgt"]
                     else:
                         target = __opts__["id"]
-                    payload = salt.utils.json.dumps(event)
+                    payload = salt.utils.json.dumps(eventData)
                     salt.utils.http.query(
                         "https://thrivedev.service-now.com/api/global/em/jsonv2",
                         "POST",
