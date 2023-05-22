@@ -5,17 +5,26 @@ from operator import itemgetter
 from datetime import datetime
 
 
+def sendMineUpdateEvent(mineName, data):
+    __salt__["event.send"](
+        "thrive/mine/"+__grains__["id"]+"/"+mineName,
+        data,
+    )
+
+
 def health():
+    sendMineUpdateEvent("health", {"lastCheckIn": datetime.utcnow(
+    ), "checkInMaster": __grains__["master"]})
     return {"lastCheckIn": datetime.utcnow(), "checkInMaster": __grains__["master"]}
 
 
-def sendGrains():
-    __salt__["event.send"](
-        "myco/my_custom_module/finished",
-        {"with_grains": True, "message": "Grains Updated"},
-        with_grains=True
-    )
-    return True
+# def sendGrains():
+#     __salt__["event.send"](
+#         "myco/my_custom_module/finished",
+#         {"with_grains": True, "message": "Grains Updated"},
+#         with_grains=True
+#     )
+#     return True
 
 
 def pings():
