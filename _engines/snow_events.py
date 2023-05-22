@@ -51,35 +51,33 @@ def start():
 
                 if event:
                     # Check if it is a job
-                    if "fun" in event:
-                        fun = event["fun"]
-                        target = ""
-                        tag = event["tag"] if "tag" in event else None
-                        if "id" in event:
-                            target = event["id"]
-                        elif "tgt" in event:
-                            target = event["tgt"]
-                        else:
-                            target = __opts__["id"]
-                        payload = salt.utils.json.dumps(event)
-                        salt.utils.http.query(
-                            "https://thrivedev.service-now.com/api/global/em/jsonv2",
-                            "POST",
-                            header_dict={"Content-Type": "application/json",
-                                         "Authorization": SNOW_ACCT_AUTH},
-                            data=salt.utils.json.dumps({"records":
-                                                        [
-                                                            {
-                                                                "source": "ThriveRMM",
-                                                                "event_class": fun,
-                                                                "resource": target,
-                                                                "node": target,
-                                                                "metric_name": fun,
-                                                                "type": "RMM Event",
-                                                                "severity": "4",
-                                                                "description": tag,
-                                                                "additional_info": payload
-                                                            }
-                                                        ]
-                                                        })
-                        )
+                    target = ""
+                    tag = event["tag"] if "tag" in event else None
+                    if "id" in event:
+                        target = event["id"]
+                    elif "tgt" in event:
+                        target = event["tgt"]
+                    else:
+                        target = __opts__["id"]
+                    payload = salt.utils.json.dumps(event)
+                    salt.utils.http.query(
+                        "https://thrivedev.service-now.com/api/global/em/jsonv2",
+                        "POST",
+                        header_dict={"Content-Type": "application/json",
+                                     "Authorization": SNOW_ACCT_AUTH},
+                        data=salt.utils.json.dumps({"records":
+                                                    [
+                                                        {
+                                                            "source": "ThriveRMM",
+                                                            "event_class": tag,
+                                                            "resource": target,
+                                                            "node": target,
+                                                            "metric_name": tag,
+                                                            "type": "RMM Event",
+                                                            "severity": "4",
+                                                            "description": tag,
+                                                            "additional_info": payload
+                                                        }
+                                                    ]
+                                                    })
+                    )
