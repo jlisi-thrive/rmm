@@ -75,6 +75,7 @@ def start():
                                                             "source": "ThriveRMM",
                                                             "event_class": tag,
                                                             "resource": target,
+                                                            "message_key": tag,
                                                             "node": target,
                                                             "metric_name": tag,
                                                             "type": "RMM Event",
