@@ -70,7 +70,6 @@ def start():
                                                         [
                                                             {
                                                                 "source": "ThriveRMM",
-                                                                "message_key": jid,
                                                                 "event_class": fun,
                                                                 "resource": target,
                                                                 "node": target,
