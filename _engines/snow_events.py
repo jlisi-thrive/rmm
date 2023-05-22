@@ -46,27 +46,40 @@ def start():
         if (SNOW_ACCT_AUTH):
             while True:
                 event = event_bus.get_event()
-                log.critical("SENDING EVENT")
+                tag = event["tag"]
+
                 if event:
-                    payload = salt.utils.json.dumps(event)
-                    salt.utils.http.query(
-                        "https://thrivedev.service-now.com/api/global/em/jsonv2",
-                        "POST",
-                        header_dict={"Content-Type": "application/json",
-                                     "Authorization": SNOW_ACCT_AUTH},
-                        data=salt.utils.json.dumps({"records":
-                                                    [
-                                                        {
-                                                            "source": "ThriveRMM",
-                                                            "event_class": "SCOM 2007 on scom.server.com",
-                                                            "resource": "C:",
-                                                            "node": "name.of.node.com",
-                                                            "metric_name": "Percentage Logical Disk Free Space",
-                                                            "type": "RMM Event",
-                                                            "severity": "4",
-                                                            "description": "The disk C: on computer V-W2K8-dfg.dfg.com is running out of disk space. The value that exceeded the threshold is 41% free space.",
-                                                            "additional_info": payload
-                                                        }
-                                                    ]
-                                                    })
-                    )
+                    # Check if it is a job
+                    if "jid" in event:
+                        jid = event["jid"]
+                        fun = event["fun"]
+                        target = ""
+                        if "id" in event:
+                            target = event["id"]
+                        elif "tgt" in event:
+                            target = event["tgt"]
+                        else:
+                            target = __opts__["id"]
+                        payload = salt.utils.json.dumps(event)
+                        salt.utils.http.query(
+                            "https://thrivedev.service-now.com/api/global/em/jsonv2",
+                            "POST",
+                            header_dict={"Content-Type": "application/json",
+                                         "Authorization": SNOW_ACCT_AUTH},
+                            data=salt.utils.json.dumps({"records":
+                                                        [
+                                                            {
+                                                                "source": "ThriveRMM",
+                                                                "message_key": jid,
+                                                                "event_class": fun,
+                                                                "resource": target,
+                                                                "node": target,
+                                                                "metric_name": fun,
+                                                                "type": "RMM Event",
+                                                                "severity": "4",
+                                                                "description": fun,
+                                                                "additional_info": payload
+                                                            }
+                                                        ]
+                                                        })
+                        )
