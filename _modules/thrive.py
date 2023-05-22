@@ -13,6 +13,7 @@ def sendGrains():
     __salt__["event.send"](
         "myco/my_custom_module/finished",
         {"with_grains": True, "message": "Grains Updated"},
+        with_grains=True
     )
     return True
 
