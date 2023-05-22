@@ -22,7 +22,7 @@ __virtualname__ = "snow_events"
 def event_bus_context(opts):
     if opts["__role"] == "master":
         event_bus = salt.utils.event.get_event(
-            "master",
+            "minion",
             opts=opts,
             sock_dir=opts["sock_dir"],
             full=True,
