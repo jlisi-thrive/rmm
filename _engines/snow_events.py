@@ -46,7 +46,7 @@ def start():
         if (SNOW_ACCT_AUTH):
             while True:
                 event = event_bus.get_event()
-                tag = event["tag"]
+                # tag = event["tag"]
 
                 if event:
                     # Check if it is a job
