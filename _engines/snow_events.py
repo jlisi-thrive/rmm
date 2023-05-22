@@ -21,10 +21,13 @@ __virtualname__ = "snow_events"
 
 def event_bus_context(opts):
     if opts["__role"] == "master":
-        event_bus = salt.utils.event.get_master_event(
-            opts, opts["sock_dir"], listen=True
+        event_bus = salt.utils.event.get_event(
+            "master",
+            opts=opts,
+            sock_dir=opts["sock_dir"],
+            full=True,
+            listen=True
         )
-        log.critical("test engine for master started")
     else:
         event_bus = salt.utils.event.get_event(
             "minion",
@@ -33,7 +36,6 @@ def event_bus_context(opts):
             full=True,
             listen=True,
         )
-        log.critical("test engine for minion started")
     return event_bus
 
 
