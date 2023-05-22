@@ -22,7 +22,7 @@ __virtualname__ = "snow_events"
 def event_bus_context(opts):
     if opts["__role"] == "master":
         event_bus = salt.utils.event.get_master_event(
-            opts, opts["sock_dir"], listen=True
+            opts, opts["sock_dir"], full=True, listen=True
         )
         log.critical("test engine for master started")
     else:
@@ -30,6 +30,7 @@ def event_bus_context(opts):
             "minion",
             opts=opts,
             sock_dir=opts["sock_dir"],
+            full=True,
             listen=True,
         )
         log.critical("test engine for minion started")
@@ -50,35 +51,34 @@ def start():
 
                 if event:
                     # Check if it is a job
-                    if "jid" in event:
-                        jid = event["jid"]
-                        fun = event["fun"]
-                        target = ""
-                        if "id" in event:
-                            target = event["id"]
-                        elif "tgt" in event:
-                            target = event["tgt"]
-                        else:
-                            target = __opts__["id"]
-                        payload = salt.utils.json.dumps(event)
-                        salt.utils.http.query(
-                            "https://thrivedev.service-now.com/api/global/em/jsonv2",
-                            "POST",
-                            header_dict={"Content-Type": "application/json",
-                                         "Authorization": SNOW_ACCT_AUTH},
-                            data=salt.utils.json.dumps({"records":
-                                                        [
-                                                            {
-                                                                "source": "ThriveRMM",
-                                                                "event_class": fun,
-                                                                "resource": target,
-                                                                "node": target,
-                                                                "metric_name": fun,
-                                                                "type": "RMM Event",
-                                                                "severity": "4",
-                                                                "description": fun,
-                                                                "additional_info": payload
-                                                            }
-                                                        ]
-                                                        })
-                        )
+                    fun = event["fun"]
+                    target = ""
+                    tag = event["tag"] if "tag" in event else None
+                    if "id" in event:
+                        target = event["id"]
+                    elif "tgt" in event:
+                        target = event["tgt"]
+                    else:
+                        target = __opts__["id"]
+                    payload = salt.utils.json.dumps(event)
+                    salt.utils.http.query(
+                        "https://thrivedev.service-now.com/api/global/em/jsonv2",
+                        "POST",
+                        header_dict={"Content-Type": "application/json",
+                                     "Authorization": SNOW_ACCT_AUTH},
+                        data=salt.utils.json.dumps({"records":
+                                                    [
+                                                        {
+                                                            "source": "ThriveRMM",
+                                                            "event_class": fun,
+                                                            "resource": target,
+                                                            "node": target,
+                                                            "metric_name": fun,
+                                                            "type": "RMM Event",
+                                                            "severity": "4",
+                                                            "description": tag,
+                                                            "additional_info": payload
+                                                        }
+                                                    ]
+                                                    })
+                    )
