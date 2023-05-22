@@ -12,7 +12,7 @@ def health():
 def sendGrains():
     __salt__["event.send"](
         "myco/my_custom_module/finished",
-        {"finished": True, "message": json.dump(__grains__)},
+        {"with_grains": True, "message": "Grains Updated"},
     )
     return True
 
