@@ -47,6 +47,8 @@ def start():
             while True:
                 event = event_bus.get_event(full=True)
                 # tag = event["tag"]
+                if event is None:
+                    continue
 
                 if event:
                     # Check if it is a job
