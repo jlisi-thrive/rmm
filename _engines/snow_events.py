@@ -24,7 +24,9 @@ def event_bus_context(opts):
     if opts["__role"] == "master":
         event_bus = salt.utils.event.get_event(
             "master",
-            opts, opts["sock_dir"], listen=True
+            opts=opts,
+            sock_dir=opts["sock_dir"],
+            listen=True,
         )
     else:
         event_bus = salt.utils.event.get_event(
