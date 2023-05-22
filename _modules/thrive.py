@@ -45,6 +45,7 @@ def pings():
             'avg': response.rtt_avg
         }
         results.append(resObj)
-
+    # sendMineUpdateEvent("pings", {"lastCheckIn": datetime.utcnow(
+    #     ), "checkInMaster": __grains__["master"]})
     # __salt__["grains.setval"]("pings", results)
     return results
