@@ -6,6 +6,7 @@ import logging
 import salt.utils.event
 import salt.utils.http
 import salt.utils.json
+import fnmatch
 
 
 def __virtual__():
@@ -23,14 +24,13 @@ def event_bus_context(opts):
     if opts["__role"] == "master":
         event_bus = salt.utils.event.get_event(
             "master",
-            opts, opts["sock_dir"], full=True, listen=True
+            opts, opts["sock_dir"], listen=True
         )
     else:
         event_bus = salt.utils.event.get_event(
             "minion",
             opts=opts,
             sock_dir=opts["sock_dir"],
-            full=True,
             listen=True,
         )
     return event_bus
@@ -45,7 +45,7 @@ def start():
         SNOW_ACCT_AUTH = __opts__.get("snow.auth", None)
         if (SNOW_ACCT_AUTH):
             while True:
-                event = event_bus.get_event()
+                event = event_bus.get_event(full=True)
                 # tag = event["tag"]
 
                 if event:
