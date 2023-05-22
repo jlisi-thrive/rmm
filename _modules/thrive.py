@@ -14,7 +14,7 @@ def sendMineUpdateEvent(mineName, data):
 
 def health():
     sendMineUpdateEvent("health", {"lastCheckIn": datetime.utcnow(
-    ), "checkInMaster": __grains__["master"]})
+    ).isoformat(), "checkInMaster": __grains__["master"]})
     return {"lastCheckIn": datetime.utcnow(), "checkInMaster": __grains__["master"]}
 
 
