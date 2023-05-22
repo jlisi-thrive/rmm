@@ -10,7 +10,11 @@ def health():
 
 
 def sendGrains():
-    return __salt__["event.send"]("thrive/grains", json.dumps(__grains__))
+    __salt__["event.send"](
+        "myco/my_custom_module/finished",
+        {"finished": True, "message": json.dumps(__grains__)},
+    )
+    return True
 
 
 def pings():
