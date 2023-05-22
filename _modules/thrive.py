@@ -10,7 +10,7 @@ def health():
 
 
 def sendGrains():
-    __salt__["event.send"]("thrive/grains", json.dumps(__grains__))
+    return __salt__["event.send"]("thrive/grains", json.dumps(__grains__))
 
 
 def pings():
