@@ -9,6 +9,10 @@ def health():
     return {"lastCheckIn": datetime.utcnow(), "checkInMaster": __grains__["master"]}
 
 
+def sendGrains():
+    __salt__["event.send"]("thrive/grains", json.dumps(__grains__))
+
+
 def pings():
     destinations = ["8.8.8.8", "8.8.4.4", "thrive.service-now.com"]
     ping_parser = pingparsing.PingParsing()
