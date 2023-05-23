@@ -57,12 +57,16 @@ def start():
                     target = ""
                     eventData = event["data"]
                     tag = event["tag"] if "tag" in event else None
-                    if "id" in eventData:
-                        target = eventData["id"]
-                    elif "tgt" in eventData:
-                        target = eventData["tgt"]
+
+                    if "thrive/mine" in tag:
+                        target = event["tag"].split("/")[2]
                     else:
-                        target = __opts__["id"]
+                        if "id" in eventData:
+                            target = eventData["id"]
+                        elif "tgt" in eventData:
+                            target = eventData["tgt"]
+                        else:
+                            target = __opts__["id"]
                     payload = salt.utils.json.dumps(
                         eventData, indent=4, sort_keys=True, default=str)
                     salt.utils.http.query(
