@@ -63,7 +63,8 @@ def start():
                         target = eventData["tgt"]
                     else:
                         target = __opts__["id"]
-                    payload = salt.utils.json.dumps(eventData)
+                    payload = salt.utils.json.dumps(
+                        eventData, indent=4, sort_keys=True, default=str)
                     salt.utils.http.query(
                         "https://thrivedev.service-now.com/api/global/em/jsonv2",
                         "POST",

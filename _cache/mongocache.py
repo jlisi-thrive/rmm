@@ -101,8 +101,7 @@ def store(bank, key, data, cachedir):
     newvalues = {"$set": {**dataWithHost,
                           "account": accountName, "updated": utcTime}}
     runner = salt.runner.RunnerClient(__opts__)
-    runner.cmd('event.send', ["thrive/mine/"+minion +
-               "/store", json.dumps(dataWithHost, indent=4, sort_keys=True, default=str)])
+    runner.cmd('event.send', ["thrive/mine/"+minion+"/store", dataWithHost])
     # __salt__["event.send"](
     #     "thrive/mine/"+minion+"/store",
     #     dataWithHost,
