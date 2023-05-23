@@ -20,6 +20,7 @@ import salt.runner
 import salt.utils.stringutils
 import salt.utils.jid
 import salt.utils.atomicfile
+import salt.utils.http
 import salt.utils.files
 from salt.exceptions import SaltCacheError
 
@@ -100,8 +101,20 @@ def store(bank, key, data, cachedir):
     utcTime = datetime.now()
     newvalues = {"$set": {**dataWithHost,
                           "account": accountName, "updated": utcTime}}
-    runner = salt.runner.RunnerClient(__opts__)
-    runner.cmd('event.send', ["thrive/mine/"+minion+"/store", dataWithHost])
+    SNOW_ACCT_AUTH = __opts__.get("snow.auth", None)
+    if SNOW_ACCT_AUTH:
+        if "status.cpuload" in dataWithHost:
+            salt.utils.http.query(
+                "https://thrivedev.service-now.com/u_thrivermm_minions.do?JSONv2&sysparm_query=u_minion=" +
+                minion+"&sysparm_action=update",
+                "POST",
+                header_dict={"Content-Type": "application/json",
+                             "Authorization": SNOW_ACCT_AUTH},
+                data=salt.utils.json.dumps(
+                    {"u_cpu_usage": dataWithHost["status.cpuload"]})
+            )
+    # runner = salt.runner.RunnerClient(__opts__)
+    # runner.cmd('event.send', ["thrive/mine/"+minion+"/store", dataWithHost])
     # __salt__["event.send"](
     #     "thrive/mine/"+minion+"/store",
     #     dataWithHost,
