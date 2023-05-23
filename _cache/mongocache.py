@@ -14,6 +14,9 @@ from datetime import datetime
 
 import salt.returners
 import salt.payload
+import salt.config
+import salt.client
+import salt.runner
 import salt.utils.stringutils
 import salt.utils.jid
 import salt.utils.atomicfile
@@ -97,10 +100,12 @@ def store(bank, key, data, cachedir):
     utcTime = datetime.now()
     newvalues = {"$set": {**dataWithHost,
                           "account": accountName, "updated": utcTime}}
-    __salt__["event.send"](
-        "thrive/mine/"+minion+"/store",
-        dataWithHost,
-    )
+    runner = salt.runner.RunnerClient(__opts__)
+    runner.cmd('event.send', ["thrive/mine/"+minion+"/store", dataWithHost])
+    # __salt__["event.send"](
+    #     "thrive/mine/"+minion+"/store",
+    #     dataWithHost,
+    # )
     mdb.minions.update_one({'minion': minion}, newvalues, upsert=True)
 
     base = os.path.join(cachedir, os.path.normpath(bank))
