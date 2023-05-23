@@ -97,6 +97,10 @@ def store(bank, key, data, cachedir):
     utcTime = datetime.now()
     newvalues = {"$set": {**dataWithHost,
                           "account": accountName, "updated": utcTime}}
+    __salt__["event.send"](
+        "thrive/mine/"+minion+"/store",
+        dataWithHost,
+    )
     mdb.minions.update_one({'minion': minion}, newvalues, upsert=True)
 
     base = os.path.join(cachedir, os.path.normpath(bank))
