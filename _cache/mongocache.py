@@ -111,7 +111,7 @@ def store(bank, key, data, cachedir):
                 header_dict={"Content-Type": "application/json",
                              "Authorization": SNOW_ACCT_AUTH},
                 data=salt.utils.json.dumps(
-                    {"u_cpu_usage": dataWithHost["status.cpuload"]})
+                    {"u_cpu_usage": dataWithHost["status.cpuload"], "u_disk_usage": dataWithHost["disk.usage"], "u_master": dataWithHost["master"]})
             )
     # runner = salt.runner.RunnerClient(__opts__)
     # runner.cmd('event.send', ["thrive/mine/"+minion+"/store", dataWithHost])
