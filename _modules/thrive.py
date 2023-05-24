@@ -16,11 +16,9 @@ def sendMineUpdateEvent(mineName, data):
 
 def mine():
     return {
-        "thrive": {
-            "u_cpu_usage": __salt__["status.cpuload"](),
-            "u_disk_usage": __salt__["disk.usage"](),
-            "u_master": __grains__["master"]
-        }
+        "u_cpu_usage": __salt__["status.cpuload"](),
+        "u_disk_usage": __salt__["disk.usage"](),
+        "u_master": __grains__["master"]
     }
 
 
