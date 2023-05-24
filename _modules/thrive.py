@@ -16,7 +16,7 @@ def sendMineUpdateEvent(mineName, data):
     )
 
 
-def thrive_mine():
+def mine():
     return {
         "thrive": {
             "u_cpu_usage": __salt__["status.cpuload"](),
