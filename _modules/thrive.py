@@ -23,7 +23,14 @@ def mine_data():
     return {
         "u_cpu_usage": __salt__["status.cpuload"](),
         "u_disk_usage": __salt__["disk.usage"](),
-        "u_master": __grains__["master"]
+        "u_master": __grains__["master"],
+        "u_account": __grains__["account_sys_id"],
+        "u_cpu": __grains__["cpu_model"],
+        "u_domain": __grains__["domain"],
+        "u_host": __grains__["host"],
+        "u_memory": __grains__["mem_total"],
+        "u_number_of_cpus": __grains__["num_cpus"],
+        "u_os": __grains__["osfullname"]
     }
 
 
