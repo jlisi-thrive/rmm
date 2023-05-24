@@ -16,6 +16,16 @@ def sendMineUpdateEvent(mineName, data):
     )
 
 
+def thrive_mine():
+    return {
+        "thrive": {
+            "u_cpu_usage": __salt__["status.cpuload"](),
+            "u_disk_usage": __salt__["disk.usage"](),
+            "u_master": __grains__["master"]
+        }
+    }
+
+
 def health():
     # sendMineUpdateEvent("health", {"lastCheckIn": datetime.utcnow(
     # ).isoformat(), "checkInMaster": __grains__["master"]})
