@@ -1,10 +1,15 @@
 import json
 import requests
-import pingparsing
 from operator import itemgetter
 from datetime import datetime
 
 __virtualname__ = "thrive"
+
+try:
+    import pingparsing
+    HAS_PINGPARSING = True
+except ImportError:
+    HAS_PINGPARSING = False
 
 
 def sendMineUpdateEvent(mineName, data):
@@ -38,6 +43,8 @@ def health():
 
 
 def pings():
+    if not HAS_PINGPARSING:
+        return {}
     destinations = ["8.8.8.8", "8.8.4.4", "thrive.service-now.com"]
     ping_parser = pingparsing.PingParsing()
     transmitter = pingparsing.PingTransmitter()
