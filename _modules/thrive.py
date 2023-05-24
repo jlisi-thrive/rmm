@@ -4,9 +4,7 @@ import pingparsing
 from operator import itemgetter
 from datetime import datetime
 
-
-def testing_utils():
-    return __utils__["thrive.bar"]()
+__virtualname__ = "thrive"
 
 
 def sendMineUpdateEvent(mineName, data):
