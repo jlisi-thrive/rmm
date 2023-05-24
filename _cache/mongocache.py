@@ -105,7 +105,7 @@ def store(bank, key, data, cachedir):
     if SNOW_ACCT_AUTH:
         if "u_thrive_data" in dataWithHost:
             salt.utils.http.query(
-                "https://thrivedev.service-now.comapi/thn/rmm/mine/" +
+                "https://thrivedev.service-now.com/api/thn/rmm/mine/" +
                 minion,
                 "POST",
                 header_dict={"Content-Type": "application/json",
