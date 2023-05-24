@@ -113,16 +113,16 @@ def store(bank, key, data, cachedir):
                 decode=True,
                 data=salt.utils.json.dumps(dataWithHost["u_thrive_data"])
             )
-        if "status.cpuload" in dataWithHost:
-            salt.utils.http.query(
-                "https://thrivedev.service-now.com/u_thrivermm_minions.do?JSONv2&sysparm_query=u_minion=" +
-                minion+"&sysparm_action=update",
-                "POST",
-                header_dict={"Content-Type": "application/json",
-                             "Authorization": SNOW_ACCT_AUTH},
-                data=salt.utils.json.dumps(
-                    {"u_cpu_usage": dataWithHost["status.cpuload"], "u_disk_usage": dataWithHost["disk.usage"], "u_master": dataWithHost["master"]})
-            )
+        # if "status.cpuload" in dataWithHost:
+        #     salt.utils.http.query(
+        #         "https://thrivedev.service-now.com/u_thrivermm_minions.do?JSONv2&sysparm_query=u_minion=" +
+        #         minion+"&sysparm_action=update",
+        #         "POST",
+        #         header_dict={"Content-Type": "application/json",
+        #                      "Authorization": SNOW_ACCT_AUTH},
+        #         data=salt.utils.json.dumps(
+        #             {"u_cpu_usage": dataWithHost["status.cpuload"], "u_disk_usage": dataWithHost["disk.usage"], "u_master": dataWithHost["master"]})
+        #     )
     # runner = salt.runner.RunnerClient(__opts__)
     # runner.cmd('event.send', ["thrive/mine/"+minion+"/store", dataWithHost])
     # __salt__["event.send"](
