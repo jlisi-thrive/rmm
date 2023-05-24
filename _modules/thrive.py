@@ -14,7 +14,7 @@ def sendMineUpdateEvent(mineName, data):
     )
 
 
-def mine():
+def mine_data():
     return {
         "u_cpu_usage": __salt__["status.cpuload"](),
         "u_disk_usage": __salt__["disk.usage"](),
