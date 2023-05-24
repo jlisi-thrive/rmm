@@ -110,6 +110,7 @@ def store(bank, key, data, cachedir):
                 "POST",
                 header_dict={"Content-Type": "application/json",
                              "Authorization": SNOW_ACCT_AUTH},
+                decode=True,
                 data=salt.utils.json.dumps(dataWithHost["u_thrive_data"])
             )
         if "status.cpuload" in dataWithHost:
