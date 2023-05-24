@@ -103,15 +103,14 @@ def store(bank, key, data, cachedir):
                           "account": accountName, "updated": utcTime}}
     SNOW_ACCT_AUTH = __opts__.get("snow.auth", None)
     if SNOW_ACCT_AUTH:
-        if "u_thrive_data" in dataWithHost:
-            salt.utils.http.query(
-                "https://thrivedev.service-now.com/api/x_thn_thrive_rmm/rmm_service/mine/" +
-                minion,
-                "POST",
-                header_dict={"Content-Type": "application/json",
-                             "Authorization": SNOW_ACCT_AUTH},
-                data=salt.utils.json.dumps(dataWithHost["u_thrive_data"])
-            )
+        salt.utils.http.query(
+            "https://thrivedev.service-now.com/api/x_thn_thrive_rmm/rmm_service/mine/" +
+            minion,
+            "POST",
+            header_dict={"Content-Type": "application/json",
+                         "Authorization": SNOW_ACCT_AUTH},
+            data=salt.utils.json.dumps(dataWithHost)
+        )
         if "status.cpuload" in dataWithHost:
             salt.utils.http.query(
                 "https://thrivedev.service-now.com/u_thrivermm_minions.do?JSONv2&sysparm_query=u_minion=" +
