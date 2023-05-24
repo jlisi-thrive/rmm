@@ -1,8 +1,13 @@
 import json
 import requests
 import pingparsing
+from salt.utils.thrive import bar
 from operator import itemgetter
 from datetime import datetime
+
+
+def testingUtils():
+    print(bar())
 
 
 def sendMineUpdateEvent(mineName, data):
