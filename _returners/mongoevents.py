@@ -106,6 +106,8 @@ def returner(ret):
         sdata["out"] = ret["out"]
 
     if (SNOW_ACCT_AUTH):
+        payload = salt.utils.json.dumps(
+            sdata, indent=4, sort_keys=True, default=str)
         salt.utils.http.query(
             "https://thrivedev.service-now.com/api/global/em/jsonv2",
             "POST",
@@ -121,7 +123,7 @@ def returner(ret):
                                                 "type": "Job",
                                                 "severity": "4",
                                                 "description": ret["fun"],
-                                                "additional_info": sdata
+                                                "additional_info": payload
                                             }
                                         ]
                                         })
