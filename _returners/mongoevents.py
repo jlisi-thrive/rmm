@@ -7,7 +7,7 @@ from azure.eventhub import EventHubProducerClient, EventData
 import uuid
 import salt.returners
 import salt.utils.jid
-
+import salt.utils.http
 
 try:
     import pymongo
@@ -83,7 +83,7 @@ def returner(ret):
     Return data to a mongodb server
     """
     conn, mdb = _get_conn(ret)
-
+    SNOW_ACCT_AUTH = __opts__.get("snow.auth", None)
     if isinstance(ret["return"], dict):
         back = _remove_dots(ret["return"])
     else:
@@ -104,6 +104,28 @@ def returner(ret):
     }
     if "out" in ret:
         sdata["out"] = ret["out"]
+
+    if (SNOW_ACCT_AUTH):
+        salt.utils.http.query(
+            "https://thrivedev.service-now.com/api/global/em/jsonv2",
+            "POST",
+            header_dict={"Content-Type": "application/json",
+                         "Authorization": SNOW_ACCT_AUTH},
+            data=salt.utils.json.dumps({"records":
+                                        [
+                                            {
+                                                "source": "RMM",
+                                                "resource": ret["id"],
+                                                "node": ret["id"],
+                                                "metric_name": ret["fun"],
+                                                "type": "Job",
+                                                "severity": "4",
+                                                "description": ret["fun"],
+                                                "additional_info": sdata
+                                            }
+                                        ]
+                                        })
+        )
 
     # save returns in the saltReturns collection in the json format:
     # { 'minion': <minion_name>, 'jid': <job_id>, 'return': <return info with dots removed>,
